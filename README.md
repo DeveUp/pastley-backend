@@ -102,7 +102,7 @@ Sistema ERP que permite gestionar una pastelería automatización en las ventas 
 
 ## Agradecimientos
 
- - Al docente de microservicios por guiarnos y permitirnos adquirir los conocimientos aplicados en el presente proyecto. 
+ Al docente **ING. FREDY HUMBERTO VERA** de microservicios por guiarnos y permitirnos adquirir los conocimientos aplicados en el presente proyecto. 
 
 
 ## Licencia
