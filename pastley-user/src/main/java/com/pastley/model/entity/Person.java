@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
  * @project Pastley-User.
  * @author Leyner Jose Ortega Arias.
  * @Github https://github.com/leynerjoseoa.
- * @contributors soleimygomez, serbuitrago, jhonatanbeltran.
+ * @contributors serbuitrago.
  * @version 1.0.0.
  */
 @Entity
@@ -76,32 +76,22 @@ public class Person implements Serializable {
 	 */
 	public String validate(boolean isId) {
 		String chain = null;
-		if (isId) {
-			if (id <= 0) {
-				chain = "El id de la persona debe ser mayor a cero.";
-			}
-		}
-		if (!PastleyValidate.isChain(name)) {
+		if (isId && id <= 0) 
+			chain = "El id de la persona debe ser mayor a cero.";
+		if (!PastleyValidate.isChain(name))
 			chain = "El nombre de la persona no es valido.";
-		}
-		if (!PastleyValidate.isChain(subname)) {
+		if (!PastleyValidate.isChain(subname))
 			chain = "El apellido de la persona no es valido.";
-		}
-		if (!PastleyValidate.isChain(phone)) {
+		if (!PastleyValidate.isChain(phone))
 			chain = "El telefono de la persona no es valido.";
-		}
-		if (!PastleyValidate.isChain(email)) {
+		if (!PastleyValidate.isChain(email))
 			chain = "El email de la persona no es valido.";
-		}
-		if (!PastleyValidate.isEmail(email)) {
+		if (!PastleyValidate.isEmail(email))
 			chain = "El email de la persona no cumple el formato de un email.";
-		}
-		if (document <= 0) {
+		if (document <= 0)
 			chain = "El documento de la persona no es valido.";
-		}
-		if (typeDocument != null && typeDocument.getId() <= 0) {
+		if (typeDocument != null && typeDocument.getId() <= 0) 
 			chain = "El tipo de documento de la persona no es valido.";
-		}
 		return chain;
 	}
 	

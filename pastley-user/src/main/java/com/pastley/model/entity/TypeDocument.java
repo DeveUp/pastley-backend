@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
  * @project Pastley-User.
  * @author Leyner Jose Ortega Arias.
  * @Github https://github.com/leynerjoseoa.
- * @contributors soleimygomez, serbuitrago, jhonatanbeltran.
+ * @contributors serbuitrago.
  * @version 1.0.0.
  */
 @Entity
@@ -54,14 +54,10 @@ public class TypeDocument implements Serializable {
 	 */
 	public String validate(boolean isId) {
 		String chain = null;
-		if (isId) {
-			if (id <= 0) {
-				chain = "El id del tipo de docuemto debe ser mayor a cero.";
-			}
-		}
-		if (!PastleyValidate.isChain(name)) {
+		if (isId && id <= 0)
+			chain = "El id del tipo de docuemto debe ser mayor a cero.";
+		if (!PastleyValidate.isChain(name))
 			chain = "El nombre del tipo de docuemto no es valido.";
-		}
 		return chain;
 	}
 

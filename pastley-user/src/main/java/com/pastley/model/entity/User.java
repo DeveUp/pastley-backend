@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
  * @project Pastley-User.
  * @author Leyner Jose Ortega Arias.
  * @Github https://github.com/leynerjoseoa.
- * @contributors soleimygomez, serbuitrago, jhonatanbeltran.
+ * @contributors serbuitrago.
  * @version 1.0.0.
  */
 @Entity
@@ -90,11 +90,8 @@ public class User implements Serializable {
 	 */
 	public String validate(boolean isId) {
 		String chain = null;
-		if (isId) {
-			if (id <= 0) {
-				chain = "El id del rol debe ser mayor a cero.";
-			}
-		}
+		if (isId && id <= 0)
+			chain = "El id del rol debe ser mayor a cero.";
 		if (!PastleyValidate.isChain(password)) 
 			chain = "La clave no es valida.";
 		if(!PastleyValidate.isChain(nickname))

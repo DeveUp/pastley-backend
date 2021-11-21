@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
  * @project Pastley-Sale.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
- * @contributors soleimygomez, leynerjoseoa, jhonatanbeltran.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @Data
@@ -66,23 +66,16 @@ public class Sale implements Serializable{
 	 */
 	public String validate(boolean isId) {
 		String chain = null;
-		if(isId) {
-			if(id <= 0) {
-				chain = "El id de la venta debe ser mayor a cero.";
-			}
-		}
-		if(idCoustomer <= 0) {
+		if(isId && id <= 0)
+			chain = "El id de la venta debe ser mayor a cero.";
+		if(idCoustomer <= 0)
 			chain = "No se ha recibido el cliente de la venta.";
-		}
-		if(idMethodPay <= 0) {
+		if(idMethodPay <= 0)
 			chain = "No se ha recibido el metodo de pago de la venta.";
-		}
-		if(!PastleyValidate.isChain(iva)) {
+		if(!PastleyValidate.isChain(iva))
 			chain = "No se ha recibido el iva de la venta.";
-		}
-		if(!PastleyValidate.bigIntegerHigherZero(totalGross) || !PastleyValidate.bigIntegerHigherZero(totalNet)) {
+		if(!PastleyValidate.bigIntegerHigherZero(totalGross) || !PastleyValidate.bigIntegerHigherZero(totalNet))
 			chain = "El total neto o bruto de la venta debe ser mayor a cero.";
-		}
 		return chain;
 	}
 }

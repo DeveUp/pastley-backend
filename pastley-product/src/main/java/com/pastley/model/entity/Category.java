@@ -36,11 +36,8 @@ public class Category implements Serializable{
 	
 	public String validate(boolean isId) {
 		String chain = null;
-		if (isId) {
-			if (id <= 0) {
-				chain = "El id de la categoria debe ser mayor a cero.";
-			}
-		}
+		if (isId && id <= 0)
+			chain = "El id de la categoria debe ser mayor a cero.";
 		if (!PastleyValidate.isChain(name)) {
 			chain = "El nombre del la categoria no es valido.";
 		}

@@ -16,7 +16,7 @@ import com.pastley.util.PastleyValidate;
  * @project Pastley-User.
  * @author Leyner Jose Ortega Arias.
  * @Github https://github.com/leynerjoseoa.
- * @contributors soleimygomez, serbuitrago, jhonatanbeltran.
+ * @contributors serbuitrago.
  * @version 1.0.0.
  */
 @Data
@@ -58,14 +58,10 @@ public class Role implements Serializable {
 	 */
 	public String validate(boolean isId) {
 		String chain = null;
-		if (isId) {
-			if (id <= 0) {
-				chain = "El id del rol debe ser mayor a cero.";
-			}
-		}
-		if (name != null) {
+		if (isId && id <= 0)
+			chain = "El id del rol debe ser mayor a cero.";
+		if (!PastleyValidate.isChain(name))
 			chain = "El nombre del rol no es valido.";
-		}
 		return chain;
 	}
 	/**

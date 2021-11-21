@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
  * @project Pastley-Sale.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
- * @contributors soleimygomez, leynerjoseoa, jhonatanbeltran.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @Data
@@ -103,25 +103,16 @@ public class Cart implements Serializable {
 	
 	public String validate(boolean isId, boolean isPrice) {
 		String chain = null;
-		if(isId) {
-			if(id <= 0) {
-				chain = "El id del carrito debe ser mayor a cero.";
-			}
-		}
-		if(idProduct <= 0) {
+		if(isId && id <= 0)
+			chain = "El id del carrito debe ser mayor a cero.";
+		if(idProduct <= 0)
 			chain = "El id del producto debe ser mayor a cero.";
-		}
-		if(idCustomer <= 0) {
+		if(idCustomer <= 0)
 			chain = "El id del cliente debe ser mayor a cero.";
-		}
-		if(isPrice) {
-			if(!PastleyValidate.bigIntegerHigherZero(price)) {
-				chain = "El precio del producto debe ser mayor a cero.";
-			}
-		}
-		if(count < 0) {
+		if(isPrice && !PastleyValidate.bigIntegerHigherZero(price))
+			chain = "El precio del producto debe ser mayor a cero.";
+		if(count < 0) 
 			chain = "La cantidad debe ser mayor a cero.";
-		}
 		return chain;
 	}
 
