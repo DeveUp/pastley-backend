@@ -15,6 +15,11 @@ Sistema ERP que permite gestionar una pastelería automatización en las ventas 
 ## Microservicios
 
 - **Autenticación**
+
+  *Servicios:*
+    - Autentificación
+    - Recuperar contraseña
+    
 - **Gestión de usuario**
 
   *Servicios:*
@@ -22,7 +27,9 @@ Sistema ERP que permite gestionar una pastelería automatización en las ventas 
     - Tipo documento
     - Persona
     - Usuario
-- **Gestión de productos**: Se manejará la creación de categorías, principalmente se tiene como referencia: (tortas, postres, bebidas).
+- **Gestión de productos**: 
+
+   Se manejará la creación de categorías, principalmente se tiene como referencia: (tortas, postres, bebidas).
    
    De igual manera también es la creación de los diferentes productos pertenecientes a la
    categoría designada, estos productos contarán con especificaciones como nombre, precio,
@@ -35,16 +42,27 @@ Sistema ERP que permite gestionar una pastelería automatización en las ventas 
 
 - **Gestión de ventas**
 
-Es el encargado de realizar el manejo de las ventas y pagos de los diferentes
-productos seleccionados por el cliente, estos productos escogidos por el usuario se cargaran en
-el carrito de compras y siguiendo el proceso de compra podremos finalizar la venta de los
-productos por el método de pago de paypal.
+    Es el encargado de realizar el manejo de las ventas y pagos de los diferentes
+    productos seleccionados por el cliente, estos productos escogidos por el usuario se cargaran en
+    el carrito de compras y siguiendo el proceso de compra podremos finalizar la venta de los
+    productos por el método de pago de paypal.
+    
+    *Servicios:*
+    - Carrito
+    - Metodo de pago
+    - Venta
 
 - **Contacto**
-Es el que va a manejar la comunicación del usuario con la empresa, el
-usuario podrá contactar con la empresa por medio de un formulario donde podremos plantear
-nuestra (queja, reclamo o petición), esto se registrará en la base de datos de la empresa la
-petición y se re enviará al correo electrónico del usuario el mensaje que realizó.
+    Es el que va a manejar la comunicación del usuario con la empresa, el
+    usuario podrá contactar con la empresa por medio de un formulario donde podremos plantear
+    nuestra (queja, reclamo o petición), esto se registrará en la base de datos de la empresa la
+    petición y se re enviará al correo electrónico del usuario el mensaje que realizó.
+    
+    *Servicios:*
+    - Tipo PQR
+    - Contacto
+    - Respuesta contacto
+    - Empresa
 
 ## Roles
 
@@ -84,7 +102,7 @@ petición y se re enviará al correo electrónico del usuario el mensaje que rea
 
 ## Agradecimientos
 
- - [Al docente de microservicios por guiarnos y permitirnos adquirir los conocimientos aplicados en el presente proyecto. ](https://web.facebook.com/kajarka35/)
+ Al docente **ING. FREDY HUMBERTO VERA** de microservicios por guiarnos y permitirnos adquirir los conocimientos aplicados en el presente proyecto. 
 
 
 ## Licencia
