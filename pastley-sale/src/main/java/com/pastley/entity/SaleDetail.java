@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
  * @project Pastley-Sale.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
- * @contributors soleimygomez, leynerjoseoa, jhonatanbeltran.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @Data
@@ -49,17 +49,12 @@ public class SaleDetail implements Serializable {
 	 */
 	public String validate(boolean isId) {
 		String chain = null;
-		if (isId) {
-			if (id <= 0) {
-				chain = "El id del detalle de venta debe ser mayor a cero.";
-			}
-		}
-		if (idSale <= 0) {
+		if (isId && id <= 0)
+			chain = "El id del detalle de venta debe ser mayor a cero.";
+		if (idSale <= 0)
 			chain = "No has seleccionado la venta que esta asociada a este detalle.";
-		}
-		if (cart == null || cart.getId() <= 0) {
+		if (cart == null || cart.getId() <= 0)
 			chain = "El producto del carrito no es valido.";
-		} 
 		return chain;
 	}
 }

@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
  * @project Pastley-Sale.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
- * @contributors soleimygomez, leynerjoseoa, jhonatanbeltran.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @Data
@@ -53,14 +53,10 @@ public class MethodPay implements Serializable {
 	 */
 	public String validate(boolean isId) {
 		String chain = null;
-		if(isId) {
-			if(id <= 0) {
-				chain = "El id del metodo de pago debe ser mayor a cero.";
-			}
-		}
-		if(!PastleyValidate.isChain(name)) {
+		if(isId && id <= 0)
+			chain = "El id del metodo de pago debe ser mayor a cero.";
+		if(!PastleyValidate.isChain(name))
 			chain = "El nombre del metodo de pago no es valido.";
-		}
 		return chain;
 	}
 	
