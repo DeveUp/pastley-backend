@@ -1,5 +1,6 @@
 package com.pastley.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -147,6 +148,11 @@ public class TypeDocumentService implements PastleyInterface<Long, TypeDocument>
 			return true;
 		}
 		throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha eliminado el tipo de documento con el id " + id + ".");
+	}
+
+	@Override
+	public List<TypeDocument> findByStatuAll(boolean statu) {
+		return new ArrayList<>();
 	}
 
 }

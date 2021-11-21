@@ -19,6 +19,11 @@ public class PastleyVariable {
 
 	/* Swagger */
 	public static final String PASTLEY_PATH_REST = "com.pastley.rest";
+	
+	/* Users */
+	public static final Long PASTLEY_USER_ADMINISTRATOR_ID = 1L;
+	public static final Long PASTLEY_USER_CASHIER_ID = 2L;
+	public static final Long PASTLEY_USER_CUSTOMER_ID = 3L;
 
 	/* Date */
 	public static final String PASTLEY_DATE_ZONA_ID = "America/Bogota";
