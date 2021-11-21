@@ -1,5 +1,6 @@
 package com.pastley.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -201,6 +202,11 @@ public class UserService implements PastleyInterface<Long, User> {
 	@Override
 	public boolean delete(Long id) {
 		return false;
+	}
+
+	@Override
+	public List<User> findByStatuAll(boolean statu) {
+		return new ArrayList<>();
 	}
 
 }

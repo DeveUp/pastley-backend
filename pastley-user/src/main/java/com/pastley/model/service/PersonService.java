@@ -1,5 +1,6 @@
 package com.pastley.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -180,6 +181,11 @@ public class PersonService implements PastleyInterface<Long, Person>{
 			return true;
 		}
 		throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha eliminado la persona el id " + id + ".");
+	}
+
+	@Override
+	public List<Person> findByStatuAll(boolean statu) {
+		return new ArrayList<>();
 	}
 
 }

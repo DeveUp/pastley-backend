@@ -1,5 +1,6 @@
 package com.pastley.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -146,5 +147,10 @@ public class RoleService implements PastleyInterface<Long, Role> {
 			return true;
 		}
 		throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha eliminado el rol con el id " + id + ".");
+	}
+
+	@Override
+	public List<Role> findByStatuAll(boolean statu) {
+		return new ArrayList<>();
 	}
 }
