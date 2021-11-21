@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
- * @project Pastley-Sale.
+ * @project Pastley-Variable.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
- * @contributors soleimygomez, leynerjoseoa, jhonatanbeltran.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @ControllerAdvice
@@ -22,6 +22,12 @@ public class PastleyExceptionHandler {
 
 	private static final Map<String, Integer> STATUS = new HashMap<>();
 	
+	/**
+	 * Method that allows building the exception occurred in class PastleyException.
+	 * @param request, Represents the type of exception.
+	 * @param exception, Represents the exception message.
+	 * @return Building the exception.
+	 */
 	@ExceptionHandler(PastleyException.class)
 	public final ResponseEntity<PastleyExceptionModel> AllExceptions(HttpServletRequest request, Exception exception) {
 		ResponseEntity<PastleyExceptionModel> result;
@@ -34,6 +40,11 @@ public class PastleyExceptionHandler {
 		return result;
 	}
 
+	/**
+	 * Method that allows knowing the type of exception.
+	 * @param e, Represents the exception message.
+	 * @return Building the status.
+	 */
 	private Integer getStatus(Exception e) {
 		if (e instanceof PastleyException) {
 			PastleyException ex = (PastleyException) e;

@@ -2,18 +2,21 @@ package com.pastley.util;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * @project Pastley-Sale.
+ * @project Pastley-Variable.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
- * @contributors soleimygomez, leynerjoseoa, jhonatanbeltran.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
-public class PastleyValidate implements Serializable{
-	
+public class PastleyValidate implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	
+	private static final Pattern pattern = Pattern.compile(PastleyVariable.PASTLEY_VALIDATE_PATTERN_EMAIL);
+
 	/**
 	 * Method that allows to validate the strings.
 	 * 
@@ -23,19 +26,20 @@ public class PastleyValidate implements Serializable{
 	public static boolean isChain(String chain) {
 		return chain != null && chain.trim().length() > 0;
 	}
-	
+
 	/**
-	 * Method that allows you to convert a string to uppercase.
+	 * Method that allows validating if a string is an email.
 	 * @param chain, Represents the string.
-	 * @return The converted string.
+	 * @return Boolean true if it meets false if not.
 	 */
-	public static String uppercase(String chain) {
-		if(isChain(chain)) {
-			chain = chain.toUpperCase();
+	public static boolean isEmail(String chain) {
+		if (isChain(chain)) {
+			Matcher mather = pattern.matcher(chain);
+			return mather.find();
 		}
-		return chain;
+		return false;
 	}
-	
+
 	/**
 	 * Method that validates if a string contains pure numbers.
 	 * 
@@ -49,17 +53,25 @@ public class PastleyValidate implements Serializable{
 			for (char i : aux) {
 				boolean salir = true;
 				for (char j : array) {
-					if (i == j) {
+					if (i == j)
 						salir = false;
-					}
 				}
-				if (salir) {
+				if (salir)
 					return false;
-				}
 			}
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Method that allows you to convert a string to uppercase.
+	 * 
+	 * @param chain, Represents the string.
+	 * @return The converted string.
+	 */
+	public static String uppercase(String chain) {
+		return isChain(chain) ? chain.toUpperCase() : chain;
 	}
 
 	/**
@@ -83,7 +95,8 @@ public class PastleyValidate implements Serializable{
 	}
 
 	/**
-	 * Method that allows verifying if a biginteger is greater than or equal to zero.
+	 * Method that allows verifying if a biginteger is greater than or equal to
+	 * zero.
 	 * 
 	 * @param a, Represents the biginteger.
 	 * @return true if it meets false if not.
