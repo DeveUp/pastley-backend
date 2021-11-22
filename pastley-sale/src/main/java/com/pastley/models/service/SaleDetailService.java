@@ -1,4 +1,4 @@
-package com.pastley.service;
+package com.pastley.models.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.pastley.entity.Cart;
-import com.pastley.entity.SaleDetail;
-import com.pastley.repository.SaleDetailRepository;
+import com.pastley.models.entity.Cart;
+import com.pastley.models.entity.SaleDetail;
+import com.pastley.models.repository.SaleDetailRepository;
 import com.pastley.util.PastleyInterface;
 import com.pastley.util.exception.PastleyException;
 

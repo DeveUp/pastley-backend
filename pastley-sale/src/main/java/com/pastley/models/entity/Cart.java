@@ -1,4 +1,4 @@
-package com.pastley.entity;
+package com.pastley.models.entity;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.pastley.model.ProductModel;
+import com.pastley.models.model.ProductModel;
 import com.pastley.util.PastleyValidate;
 
 import lombok.Data;

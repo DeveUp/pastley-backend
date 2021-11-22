@@ -1,4 +1,4 @@
-package com.pastley.feignclients;
+package com.pastley.models.feignclients;
 
 
 import org.springframework.cloud.openfeign.FeignClient;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.pastley.model.ProductModel;
+import com.pastley.models.model.ProductModel;
 
 /**
  * @project Pastley-Sale.

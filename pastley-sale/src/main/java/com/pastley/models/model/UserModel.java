@@ -1,4 +1,4 @@
-package com.pastley.model;
+package com.pastley.models.model;
 
 import java.io.Serializable;
 

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pastley.entity.MethodPay;
-import com.pastley.service.MethodPayService;
+import com.pastley.models.entity.MethodPay;
+import com.pastley.models.service.MethodPayService;
 
 /**
  * @project Pastley-Sale.

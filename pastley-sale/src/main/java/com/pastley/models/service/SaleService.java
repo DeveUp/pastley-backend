@@ -1,4 +1,4 @@
-package com.pastley.service;
+package com.pastley.models.service;
 
 import java.text.ParseException;
 import java.util.List;
@@ -8,14 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.pastley.entity.Sale;
-import com.pastley.entity.SaleDetail;
-import com.pastley.feignclients.PersonFeignClient;
-import com.pastley.feignclients.ProductFeignClient;
-import com.pastley.model.PersonModel;
-import com.pastley.model.ProductModel;
-import com.pastley.model.UserModel;
-import com.pastley.repository.SaleRepository;
+import com.pastley.models.entity.Sale;
+import com.pastley.models.entity.SaleDetail;
+import com.pastley.models.feignclients.PersonFeignClient;
+import com.pastley.models.feignclients.ProductFeignClient;
+import com.pastley.models.model.PersonModel;
+import com.pastley.models.model.ProductModel;
+import com.pastley.models.model.UserModel;
+import com.pastley.models.repository.SaleRepository;
 import com.pastley.util.PastleyDate;
 import com.pastley.util.PastleyInterface;
 import com.pastley.util.PastleyValidate;

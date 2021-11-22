@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pastley.entity.Cart;
-import com.pastley.service.CartService;
+import com.pastley.models.entity.Cart;
+import com.pastley.models.service.CartService;
 import com.pastley.util.PastleyVariable;
 import com.pastley.util.exception.PastleyExceptionModel;
 

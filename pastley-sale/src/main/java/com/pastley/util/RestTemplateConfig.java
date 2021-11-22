@@ -1,4 +1,4 @@
-package com.pastley.config;
+package com.pastley.util;
 
 import java.io.Serializable;
 
