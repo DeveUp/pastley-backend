@@ -5,9 +5,12 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pastley.util.PastleyDate;
 import com.pastley.util.PastleyInterface;
@@ -27,44 +30,36 @@ import com.pastley.models.repository.CartRepository;
 @Service
 public class CartService implements PastleyInterface<Long, Cart> {
 
-	@Autowired
-	private CartRepository cartRepository;
+	private static final Logger LOGGER = LoggerFactory.getLogger(CartService.class);
 
 	@Autowired
-	private SaleService saleService;
+	CartRepository cartRepository;
+	@Autowired
+	SaleService saleService;
 
+	@Transactional(readOnly = true)
 	@Override
 	public Cart findById(Long id) {
-		if (id > 0) {
-			Optional<Cart> cart = cartRepository.findById(id);
-			if (cart.isPresent()) {
-				cart.get().calculate();
-				return cart.orElse(null);
-			} else {
-				throw new PastleyException(HttpStatus.NOT_FOUND,
-						"No se ha encontrado ningun producto en el carrito con el id " + id + ".");
-			}
-		} else {
+		if (id <= 0)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del producto del carrito no es valido.");
-		}
+		Optional<Cart> cart = cartRepository.findById(id);
+		if (!cart.isPresent())
+			throw new PastleyException(HttpStatus.NOT_FOUND,
+					"No se ha encontrado ningun producto en el carrito con el id " + id + ".");
+		cart.get().calculate();
+		return cart.orElse(null);
 	}
 
+	
 	public Cart findByCustomerAndProductAndStatu(boolean statu, Long idCustomer, Long idProduct) {
-		if (idCustomer > 0) {
-			if (idProduct > 0) {
-				Cart cart = cartRepository.findByCustomerAndProductAndStatu(statu, idCustomer, idProduct);
-				if (cart != null) {
-					return cart;
-				}
-				throw new PastleyException(HttpStatus.NOT_FOUND,
-						"No se ha encontrado ningun producto de carrito con el id del cliente " + idCustomer
-								+ ", id producto " + idProduct + " y estado " + statu + ".");
-			} else {
-				throw new PastleyException(HttpStatus.NOT_FOUND, "El id del producto no es valido.");
-			}
-		} else {
-			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del cliente no es valido.");
-		}
+		testCustomer(idCustomer);
+		testProduct(idProduct);
+		Cart cart = cartRepository.findByCustomerAndProductAndStatu(statu, idCustomer, idProduct);
+		if (cart == null)
+			throw new PastleyException(HttpStatus.NOT_FOUND,
+					"No se ha encontrado ningun producto de carrito con el id del cliente " + idCustomer
+							+ ", id producto " + idProduct + " y estado " + statu + ".");
+		return cart;
 	}
 
 	@Override
@@ -78,31 +73,19 @@ public class CartService implements PastleyInterface<Long, Cart> {
 	}
 
 	public List<Cart> findByCustomer(Long idCustomer) {
-		if (idCustomer > 0) {
-			return calculate(cartRepository.findByIdCustomer(idCustomer));
-		} else {
-			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del cliente no es valido.");
-		}
+		testCustomer(idCustomer);
+		return calculate(cartRepository.findByIdCustomer(idCustomer));
 	}
 
 	public List<Cart> findByCustomerAndStatus(Long idCustomer, boolean statu) {
-		if (idCustomer > 0) {
-			return calculate(cartRepository.findByCustomerAndStatus(idCustomer, statu));
-		} else {
-			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del cliente no es valido.");
-		}
+		testCustomer(idCustomer);
+		return calculate(cartRepository.findByCustomerAndStatus(idCustomer, statu));
 	}
 
 	public List<Cart> findByCustomerAndProduct(Long idCustomer, Long idProduct) {
-		if (idCustomer > 0) {
-			if (idProduct > 0) {
-				return calculate(cartRepository.findByCustomerAndProduct(idCustomer, idProduct));
-			} else {
-				throw new PastleyException(HttpStatus.NOT_FOUND, "El id del producto no es valido.");
-			}
-		} else {
-			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del cliente no es valido.");
-		}
+		testCustomer(idCustomer);
+		testProduct(idProduct);
+		return calculate(cartRepository.findByCustomerAndProduct(idCustomer, idProduct));
 	}
 
 	public List<Cart> findByProductAndStatus(Long idProduct, boolean statu) {
@@ -141,62 +124,52 @@ public class CartService implements PastleyInterface<Long, Cart> {
 		return null;
 	}
 
-	public Cart save(Cart entity, byte type) {
-		if (entity != null) {
-			String message = entity.validate(false, false);
-			String messageType = (type == 1) ? "registrado"
-					: ((type == 2) ? "actualizado"
-							: ((type == 3) ? "actualizado el estado" : ((type == 4) ? "actualizando cantidad" : "n/a")));
-			if (message == null) {
-				ProductModel product = null;
-				try {
-					product = saleService.findProductById(entity.getIdProduct());
-				} catch (Exception e) {
-				}
-				if (product != null) {
-					Cart cart = null;
-					if (entity.getId() != null && entity.getId() > 0) {
-						cart = saveToUpdate(entity, type);
-					} else {
-						cart = saveToSave(entity, type);
-					}
-					cart.setPrice(PastleyValidate.bigIntegerHigherZero(entity.getPrice()) ? entity.getPrice()
-							: PastleyValidate.bigIntegerHigherZero(product.getPrice()) ? product.getPrice()
-									: BigInteger.ZERO);
-					if (PastleyValidate.bigIntegerHigherZero(cart.getPrice())) {
-						cart.setDiscount(PastleyValidate.isChain(cart.getDiscount()) ? cart.getDiscount()
-								: PastleyValidate.isChain(product.getDiscount()) ? product.getDiscount() : "0");
-						cart.setVat(PastleyValidate.isChain(cart.getVat()) ? cart.getVat()
-								: PastleyValidate.isChain(product.getVat()) ? product.getVat() : "0");
-						cart.calculate();
-						cart = cartRepository.save(cart);
-						if (cart != null) {
-							cart.calculate();
-							return cart;
-						} else {
-							throw new PastleyException(HttpStatus.NOT_FOUND,
-									"No se ha " + messageType + " el producto carrito.");
-						}
-					} else {
-						throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType
-								+ " el producto carrito, el precio del producto debe ser mayor a cero.");
-					}
-				} else {
-					throw new PastleyException(HttpStatus.NOT_FOUND,
-							"No se ha " + messageType
-									+ " el producto carrito, no se ha encontrado ningun producto con el id "
-									+ entity.getIdProduct() + ".");
-				}
-			} else {
-				throw new PastleyException(HttpStatus.NOT_FOUND,
-						"No se ha " + messageType + " el producto carrito, " + message);
-			}
-		} else {
+	public Cart save(Cart entity, int type) {
+		if (entity == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido el cart.");
-		}
+		String message = entity.validate(false, false), messageType = saveToMessage(type);
+		if (message != null)
+			throw new PastleyException(HttpStatus.NOT_FOUND,
+					"No se ha " + messageType + " el producto carrito, " + message);
+		ProductModel product = saleService.findProductById(entity.getIdProduct());
+		Cart cart = (entity.getId() != null && entity.getId() > 0) ? saveToUpdate(entity, type)
+				: saveToSave(entity, type);
+		cart.setPrice(PastleyValidate.bigIntegerHigherZero(entity.getPrice()) ? entity.getPrice()
+				: PastleyValidate.bigIntegerHigherZero(product.getPrice()) ? product.getPrice() : BigInteger.ZERO);
+		if (!PastleyValidate.bigIntegerHigherZero(cart.getPrice()))
+			throw new PastleyException(HttpStatus.NOT_FOUND,
+					"No se ha " + messageType + " el producto carrito, el precio del producto debe ser mayor a cero.");
+		cart.setDiscount(PastleyValidate.isChain(cart.getDiscount()) ? cart.getDiscount()
+				: PastleyValidate.isChain(product.getDiscount()) ? product.getDiscount() : "0");
+		cart.setVat(PastleyValidate.isChain(cart.getVat()) ? cart.getVat()
+				: PastleyValidate.isChain(product.getVat()) ? product.getVat() : "0");
+		cart.calculate();
+		cart = cartRepository.save(cart);
+		if (cart == null)
+			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " el producto carrito.");
+		cart.calculate();
+		return cart;
 	}
 
-	private Cart saveToSave(Cart entity, byte type) {
+	@Override
+	public boolean delete(Long id) {
+		Cart cart = findById(id);
+		if (!cart.isStatu())
+			throw new PastleyException(HttpStatus.NOT_FOUND,
+					"No se ha eliminado el producto del carito con el id " + id + ", ya se realizo la venta.");
+		cartRepository.deleteById(id);
+		try {
+			if (findById(id) == null)
+				return true;
+		} catch (PastleyException e) {
+			LOGGER.error("[delete]: " + e.getMessage());
+			return true;
+		}
+		throw new PastleyException(HttpStatus.NOT_FOUND,
+				"No se ha eliminado el producto del carito con el id " + id + ".");
+	}
+
+	private Cart saveToSave(Cart entity, int type) {
 		try {
 			findByCustomerAndProductAndStatu(true, entity.getIdCustomer(), entity.getIdProduct());
 		} catch (Exception e) {
@@ -212,48 +185,57 @@ public class CartService implements PastleyInterface<Long, Cart> {
 				+ " ya tiene agregado en el carrito el producto con el id " + entity.getIdProduct() + ".");
 	}
 
-	private Cart saveToUpdate(Cart entity, byte type) {
+	private Cart saveToUpdate(Cart entity, int type) {
 		Cart cart = findById(entity.getId());
-		if (cart != null) {
-			PastleyDate date = new PastleyDate();
-			entity.setDateRegister(cart.getDateRegister());
-			entity.setCount((type == 4) ? entity.getCount()
-					: (cart.getCount() <= 0) ? ((cart.getCount() <= 0) ? 1 : cart.getCount()) : entity.getCount());
-			entity.setStatu((type == 4) ? cart.isStatu() : (type == 3) ? !entity.isStatu() : entity.isStatu());
-			entity.setDateUpdate(date.currentToDateTime(null));
-		} else {
+		if (cart == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND,
 					"No se ha encontrado ningun producto carrito con el id " + entity.getId() + ".");
-		}
+		PastleyDate date = new PastleyDate();
+		entity.setDateRegister(cart.getDateRegister());
+		entity.setCount((type == 4) ? entity.getCount()
+				: (cart.getCount() <= 0) ? ((cart.getCount() <= 0) ? 1 : cart.getCount()) : entity.getCount());
+		entity.setStatu((type == 4) ? cart.isStatu() : (type == 3) ? !entity.isStatu() : entity.isStatu());
+		entity.setDateUpdate(date.currentToDateTime(null));
 		return entity;
-
 	}
 
-	@Override
-	public boolean delete(Long id) {
-		Cart cart = findById(id);
-		if (cart.isStatu()) {
-			cartRepository.deleteById(id);
-			try {
-				if (findById(id) == null) {
-					return true;
-				}
-			} catch (PastleyException e) {
-				return true;
-			}
-		} else {
-			throw new PastleyException(HttpStatus.NOT_FOUND,
-					"No se ha eliminado el producto del carito con el id " + id + ", ya se realizo la venta.");
-		}
-		throw new PastleyException(HttpStatus.NOT_FOUND,
-				"No se ha eliminado el producto del carito con el id " + id + ".");
-	}
-
-	public List<Cart> calculate(List<Cart> list) {
+	private List<Cart> calculate(List<Cart> list) {
 		if (!list.isEmpty())
 			list.forEach((e) -> {
 				e.calculate();
 			});
 		return list;
+	}
+
+	private String saveToMessage(int type) {
+		String message = null;
+		switch (type) {
+		case 1:
+			message = "registrado";
+			break;
+		case 2:
+			message = "actualizado";
+			break;
+		case 3:
+			message = "actualizado el estado";
+			break;
+		case 4:
+			message = "actualizando cantidad";
+			break;
+		default:
+			message = "n/a";
+			break;
+		}
+		return message;
+	}
+
+	private void testCustomer(Long idCustomer) {
+		if (idCustomer <= 0)
+			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del cliente no es valido.");
+	}
+
+	private void testProduct(Long idProduct) {
+		if (idProduct <= 0)
+			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del producto no es valido.");
 	}
 }
