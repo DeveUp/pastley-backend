@@ -1,4 +1,4 @@
-package com.pastley.service;
+package com.pastley.models.service;
 
 import java.math.BigInteger;
 import java.text.ParseException;
@@ -13,9 +13,9 @@ import com.pastley.util.PastleyDate;
 import com.pastley.util.PastleyInterface;
 import com.pastley.util.PastleyValidate;
 import com.pastley.util.exception.PastleyException;
-import com.pastley.entity.Cart;
-import com.pastley.model.ProductModel;
-import com.pastley.repository.CartRepository;
+import com.pastley.models.entity.Cart;
+import com.pastley.models.model.ProductModel;
+import com.pastley.models.repository.CartRepository;
 
 /**
  * @project Pastley-Sale.

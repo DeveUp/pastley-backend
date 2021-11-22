@@ -1,4 +1,4 @@
-package com.pastley.entity;
+package com.pastley.models.entity;
 
 import java.io.Serializable;
 
@@ -7,9 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.pastley.util.PastleyValidate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,8 +24,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "method_pay")
-public class MethodPay implements Serializable {
+@Table(name = "sale_detail")
+public class SaleDetail implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -34,36 +34,27 @@ public class MethodPay implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "name", nullable = false, length = 50)
-	private String name;
+	@Column(name = "id_sale", nullable = false)
+	private Long idSale;
 
-	@Column(name = "statu", nullable = false, columnDefinition = "tinyint(1) default 1")
-	private boolean statu;
-
-	@Column(name = "date_register", nullable = false)
-	private String dateRegister;
-
-	@Column(name = "date_update", nullable = true)
-	private String dateUpdate;
+	@ManyToOne
+	@JoinColumn(name = "id_cart", nullable = false)
+	private Cart cart;
 
 	/**
 	 * Method that validates the attributes of the class.
+	 * 
 	 * @param isId, Represents if you want to validate the id.
-	 * @return The error occurred.
+	 * @return A string with the error occurred.
 	 */
 	public String validate(boolean isId) {
 		String chain = null;
-		if(isId && id <= 0)
-			chain = "El id del metodo de pago debe ser mayor a cero.";
-		if(!PastleyValidate.isChain(name))
-			chain = "El nombre del metodo de pago no es valido.";
+		if (isId && id <= 0)
+			chain = "El id del detalle de venta debe ser mayor a cero.";
+		if (idSale <= 0)
+			chain = "No has seleccionado la venta que esta asociada a este detalle.";
+		if (cart == null || cart.getId() <= 0)
+			chain = "El producto del carrito no es valido.";
 		return chain;
-	}
-	
-	/**
-	 * Convert variables to uppercase.
-	 */
-	public void uppercase() {
-		this.name = PastleyValidate.uppercase(this.name);
 	}
 }

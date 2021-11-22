@@ -1,11 +1,11 @@
-package com.pastley.repository;
+package com.pastley.models.repository;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.pastley.entity.SaleDetail;
+import com.pastley.models.entity.SaleDetail;
 
 /**
  * @project Pastley-Sale.

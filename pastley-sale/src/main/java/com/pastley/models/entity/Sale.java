@@ -1,4 +1,4 @@
-package com.pastley.entity;
+package com.pastley.models.entity;
 
 import java.io.Serializable;
 import java.math.BigInteger;
