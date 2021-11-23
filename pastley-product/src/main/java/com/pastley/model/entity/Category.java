@@ -9,10 +9,17 @@ import com.pastley.util.PastleyValidate;
 
 import java.io.Serializable;
 
-@Data
-@NoArgsConstructor
+/**
+ * @project Pastley-Product.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/SerBuitrago.
+ * @contributors leynerjoseoa.
+ * @version 1.0.0.
+ */
 @Entity
 @Table(name = "category")
+@Data
+@NoArgsConstructor
 public class Category implements Serializable{
 
     private static final long serialVersionUID = 1L;
@@ -34,13 +41,10 @@ public class Category implements Serializable{
 	@Column(name="date_update", nullable = true)
 	private String dateUpdate;
 	
-	public String validate(boolean isId) {
+	public String validate() {
 		String chain = null;
-		if (isId && id <= 0)
-			chain = "El id de la categoria debe ser mayor a cero.";
-		if (!PastleyValidate.isChain(name)) {
+		if (!PastleyValidate.isChain(name))
 			chain = "El nombre del la categoria no es valido.";
-		}
 		return chain;
 	}
 	

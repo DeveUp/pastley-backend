@@ -71,7 +71,7 @@ public class ContactResponseService implements PastleyInterface<Long, ContactRes
 	public ContactResponse save(ContactResponse entity) {
 		if(entity == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido la respuesta del contacto.");
-		String message = entity.validate(false);
+		String message = entity.validate();
 		if (message != null)
 			throw new PastleyException(HttpStatus.NOT_FOUND,
 					"Se ha presentado un error en la respuesta de contacto, " + message + ".");

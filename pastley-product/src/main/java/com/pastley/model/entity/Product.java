@@ -10,10 +10,17 @@ import com.pastley.util.PastleyValidate;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
+/**
+ * @project Pastley-Product.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/SerBuitrago.
+ * @contributors leynerjoseoa.
+ * @version 1.0.0.
+ */
 @Entity
 @Table(name = "product")
+@Data
+@NoArgsConstructor
 public class Product implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -69,10 +76,8 @@ public class Product implements Serializable {
 	@JoinColumn(name = "id_category")
 	private Category category;
 	
-	public String validate(boolean isId) {
+	public String validate() {
 		String chain = null;
-		if (isId && id <= 0)
-			chain = "El id del producto debe ser mayor a cero.";
 		if (!PastleyValidate.isChain(name))
 			chain = "El nombre del producto no es valido.";
 		if (!PastleyValidate.isChain(vat))

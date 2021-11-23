@@ -63,10 +63,8 @@ public class Contact implements Serializable {
 	@Transient
 	private String name;
 	
-	public String validate(boolean isId) {
+	public String validate() {
 		String chain = null;
-		if (isId && id <= 0)
-			chain = "El id debe ser mayor a cero.";
 		if (!PastleyValidate.isChain(message))
 			chain = "El mensaje no es valido.";
 		if (!PastleyValidate.isChain(email))

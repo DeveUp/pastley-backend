@@ -6,7 +6,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
- * @project Pastley-Sale.
+ * @project Pastley-Contact.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
  * @contributors leynerjoseoa.
