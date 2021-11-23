@@ -1,6 +1,5 @@
 package com.pastley.rest;
 
-import java.io.Serializable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,14 +20,12 @@ import com.pastley.models.service.MethodPayService;
  * @project Pastley-Sale.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
- * @contributors soleimygomez, leynerjoseoa, jhonatanbeltran.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @RestController
 @RequestMapping("/method")
-public class MethodPayRest implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class MethodPayRest {
 
 	@Autowired
 	private MethodPayService methodPayService;
@@ -117,7 +114,7 @@ public class MethodPayRest implements Serializable {
 	 */
 	@PostMapping()
 	public ResponseEntity<?> create(@RequestBody MethodPay method) {
-		return ResponseEntity.status(HttpStatus.OK).body(methodPayService.save(method, (byte) 1));
+		return ResponseEntity.status(HttpStatus.OK).body(methodPayService.save(method, 1));
 	}
 
 	/**
@@ -128,7 +125,7 @@ public class MethodPayRest implements Serializable {
 	 */
 	@PutMapping()
 	public ResponseEntity<?> update(@RequestBody MethodPay method) {
-		return ResponseEntity.status(HttpStatus.OK).body(methodPayService.save(method, (byte) 2));
+		return ResponseEntity.status(HttpStatus.OK).body(methodPayService.save(method, 2));
 	}
 
 	/**
@@ -140,7 +137,7 @@ public class MethodPayRest implements Serializable {
 	@PutMapping(value = "/update/{id}/statu")
 	public ResponseEntity<?> updateStatu(@PathVariable("id") Long id) {
 		MethodPay method = methodPayService.findById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(methodPayService.save(method, (byte) 3));
+		return ResponseEntity.status(HttpStatus.OK).body(methodPayService.save(method, 3));
 	}
 
 	/**

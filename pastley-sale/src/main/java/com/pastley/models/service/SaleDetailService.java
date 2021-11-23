@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,20 +20,22 @@ import com.pastley.util.exception.PastleyException;
  * @project Pastley-Sale.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
- * @contributors soleimygomez, leynerjoseoa, jhonatanbeltran.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @Service
 public class SaleDetailService implements PastleyInterface<Long, SaleDetail> {
 
-	@Autowired
-	private SaleDetailRepository saleDetailRepository;
+	private static final Logger LOGGER = LoggerFactory.getLogger(SaleDetailService.class);
 
 	@Autowired
-	private SaleService saleService;
+	SaleDetailRepository saleDetailRepository;
 
 	@Autowired
-	private CartService cartService;
+	SaleService saleService;
+
+	@Autowired
+	CartService cartService;
 
 	/**
 	 * Method that allows to know a sale detail by its id.
@@ -41,17 +45,13 @@ public class SaleDetailService implements PastleyInterface<Long, SaleDetail> {
 	 */
 	@Override
 	public SaleDetail findById(Long id) {
-		if (id > 0) {
-			Optional<SaleDetail> saleDetail = saleDetailRepository.findById(id);
-			if (saleDetail.isPresent()) {
-				return saleDetail.orElse(null);
-			} else {
-				throw new PastleyException(HttpStatus.NOT_FOUND,
-						"No se ha encontrado ningun detalle de venta con el id " + id + ".");
-			}
-		} else {
+		if (id <= 0)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del del detalle de venta no es valido.");
-		}
+		Optional<SaleDetail> saleDetail = saleDetailRepository.findById(id);
+		if (!saleDetail.isPresent())
+			throw new PastleyException(HttpStatus.NOT_FOUND,
+					"No se ha encontrado ningun detalle de venta con el id " + id + ".");
+		return saleDetail.orElse(null);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class SaleDetailService implements PastleyInterface<Long, SaleDetail> {
 	@Override
 	public SaleDetail save(SaleDetail entity) {
 		if (entity != null) {
-			String message = entity.validate(false);
+			String message = entity.validate();
 			if (message == null) {
 				String messageType = (entity.getId() <= 0) ? "registrar" : "actualizar";
 				SaleDetail saleDetail = null;
@@ -129,6 +129,7 @@ public class SaleDetailService implements PastleyInterface<Long, SaleDetail> {
 				return true;
 			}
 		} catch (PastleyException e) {
+			LOGGER.error("[delete(Long id)]", e);
 			return true;
 		}
 		throw new PastleyException(HttpStatus.NOT_FOUND,

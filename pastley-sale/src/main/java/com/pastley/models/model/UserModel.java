@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
  * @project Pastley-Sale.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
- * @contributors soleimygomez, leynerjoseoa, jhonatanbeltran.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @Data
@@ -27,9 +27,6 @@ public class UserModel implements Serializable {
 	private PersonModel person;
 	private RoleModel role;
 	
-	///////////////////////////////////////////////////////
-	// Builder
-	///////////////////////////////////////////////////////
 	public UserModel(String ip, boolean statu, boolean session, PersonModel person, RoleModel role) {
 		this(0L, 0L, ip, statu, session, person, role);
 	}

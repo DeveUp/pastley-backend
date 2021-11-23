@@ -1,9 +1,10 @@
 package com.pastley.models.service;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,65 +26,59 @@ import com.pastley.util.exception.PastleyException;
  * @project Pastley-Sale.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
- * @contributors soleimygomez, leynerjoseoa, jhonatanbeltran.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @Service
 public class SaleService implements PastleyInterface<Long, Sale> {
 
-	@Autowired
-	private SaleRepository saleRepository;
+	private static final Logger LOGGER = LoggerFactory.getLogger(SaleService.class);
 
 	@Autowired
-	private SaleDetailService saleDetailService;
-
+	SaleRepository saleRepository;
 	@Autowired
-	private PersonFeignClient personFeignClient;
-
+	SaleDetailService saleDetailService;
 	@Autowired
-	private ProductFeignClient productFeignClient;
+	PersonFeignClient personFeignClient;
+	@Autowired
+	ProductFeignClient productFeignClient;
 
 	@Override
 	public Sale findById(Long id) {
-		if (id > 0) {
-			Optional<Sale> sale = saleRepository.findById(id);
-			if (sale != null) {
-				return sale.orElse(null);
-			} else {
-				throw new PastleyException(HttpStatus.NOT_FOUND,
-						"No se ha encontrado ninguna venta con el id " + id + ".");
-			}
-		} else {
+		if (id <= 0)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "El id de la venta no es valido.");
-		}
+		Optional<Sale> sale = saleRepository.findById(id);
+		if (!sale.isPresent())
+			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha encontrado ninguna venta con el id " + id + ".");
+		return sale.orElse(null);
 	}
 
 	@Override
 	public List<Sale> findAll() {
 		return saleRepository.findAll();
 	}
-	
-	public List<Sale> findByIdCustomerAll(Long idCustoner){
-		if(idCustoner <= 0) 
+
+	public List<Sale> findByIdCustomerAll(Long idCustoner) {
+		if (idCustoner <= 0)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del cliente no es valido.");
 		return saleRepository.findByIdCoustomer(idCustoner);
 	}
-	
-	public List<Sale> findByIdMethodPayAll(Long idMethodPay){
-		if(idMethodPay <= 0)
+
+	public List<Sale> findByIdMethodPayAll(Long idMethodPay) {
+		if (idMethodPay <= 0)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del metodo de pago no es valido.");
 		return saleRepository.findByIdMethodPay(idMethodPay);
 	}
-	
-	public List<Sale> findByMonthAndYear(String month, int year){
-		if(!PastleyValidate.isChain(month)) 
+
+	public List<Sale> findByMonthAndYear(String month, int year) {
+		if (!PastleyValidate.isChain(month))
 			throw new PastleyException(HttpStatus.NOT_FOUND, "El mes no es valido.");
-		if(year <=0) 
+		if (year <= 0)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "El año debe ser mayor a cero.");
 		return saleRepository.findByMonthAndYear(month, year);
 	}
-	
-	public List<Sale> findByMonthAndYearCurrent(){
+
+	public List<Sale> findByMonthAndYearCurrent() {
 		PastleyDate date = new PastleyDate();
 		return findByMonthAndYear(date.currentMonthName(), date.currentYear());
 	}
@@ -94,7 +89,7 @@ public class SaleService implements PastleyInterface<Long, Sale> {
 	}
 
 	public List<Sale> findByRangeDateRegister(String start, String end) {
-		String array_date[] = findByRangeDateRegisterValidateDate(start, end);
+		String array_date[] = PastleyValidate.isRangeDateRegisterValidateDate(start, end);
 		return saleRepository.findByRangeDateRegister(array_date[0], array_date[1]);
 	}
 
@@ -102,110 +97,74 @@ public class SaleService implements PastleyInterface<Long, Sale> {
 	public Sale save(Sale entity) {
 		return null;
 	}
-	
-	public Sale save(Sale entity, byte type) {
-		if (entity != null) {
-			String message = entity.validate(false);
-			String messageType = (type == 1) ? "registrar"
-					: ((type == 2) ? "actualizar" : ((type == 3) ? "actualizar estado" : "n/a"));
-			if (message == null) {
-				Sale sale = null;
-				if (entity.getId() != null && entity.getId() > 0) {
-					sale = saveToUpdate(entity, type);
-				} else {
-					sale = saveToSave(entity, type);
-				}
-				sale = saleRepository.save(sale);
-				if (sale != null) {
-					return sale;
-				} else {
-					throw new PastleyException(HttpStatus.NOT_FOUND,
-							"No se ha " + messageType + " la venta.");
-				}
-			} else {
-				throw new PastleyException(HttpStatus.NOT_FOUND,
-						"No se ha " + messageType + " la venta, " + message + ".");
-			}
-		} else {
+
+	public Sale save(Sale entity, int type) {
+		if (entity == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido la venta.");
-		}
-	}
-
-	public Sale saveToSave(Sale entity, byte type) {
-		return null;
-	}
-
-	public Sale saveToUpdate(Sale entity, byte type) {
-		return null;
+		String message = entity.validate();
+		String messageType = PastleyValidate.messageToSave(type, false);
+		if (message != null)
+			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " la venta, " + message + ".");
+		Sale sale = (entity.getId() != null && entity.getId() > 0) ? saveToUpdate(entity, type)
+				: saveToSave(entity, type);
+		sale = saleRepository.save(sale);
+		if (sale == null)
+			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " la venta.");
+		return sale;
 	}
 
 	@Override
 	public boolean delete(Long id) {
 		findById(id);
 		List<SaleDetail> list = saleDetailService.findBySale(id);
-		if (list.isEmpty()) {
-			saleRepository.deleteById(id);
-			try {
-				if (findById(id) == null) {
-					return true;
-				}
-			} catch (PastleyException e) {
-				return true;
-			}
-		} else {
+		if (!list.isEmpty())
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha eliminado la venta con el id  " + id
 					+ ", tiene asociado a " + list.size() + " detalles de ventas.");
+		saleRepository.deleteById(id);
+		try {
+			if (findById(id) == null) {
+				return true;
+			}
+		} catch (PastleyException e) {
+			LOGGER.error("[delete(Long id)]", e);
+			return true;
 		}
 		throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha eliminado la venta con el id " + id + ".");
 	}
 
 	public PersonModel findPersonByDocument(Long documentPerson) {
-		if (documentPerson > 0) {
-			PersonModel person = personFeignClient.findByDocument(documentPerson);
-			if (person == null) {
-				throw new PastleyException(HttpStatus.NOT_FOUND,
-						"No se ha encontrado ninguna persona con el documento " + documentPerson + ".");
-			}
-			return person;
-		} else {
+		if(documentPerson <= 0)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "El documento de la persona no es valido.");
+		PersonModel person = personFeignClient.findByDocument(documentPerson);
+		if (person == null) {
+			throw new PastleyException(HttpStatus.NOT_FOUND,
+					"No se ha encontrado ninguna persona con el documento " + documentPerson + ".");
 		}
+		return person;
 	}
 
 	public UserModel findUserById(Long idUser) {
-		if (idUser > 0) {
-			return new UserModel();
-		} else {
+		if (idUser <= 0)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del usuario no es valido.");
-		}
+		return new UserModel();
 	}
 
 	public ProductModel findProductById(Long idProduct) {
-		if (idProduct > 0) {
-			ProductModel product = productFeignClient.findById(idProduct);
-			if (product == null) {
-				throw new PastleyException(HttpStatus.NOT_FOUND,
-						"No se ha encontrado ningun producto con el id " + idProduct + ".");
-			}
-			return product;
-		} else {
+		if (idProduct <= 0)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del producto no es valido.");
+		ProductModel product = productFeignClient.findById(idProduct);
+		if (product == null) {
+			throw new PastleyException(HttpStatus.NOT_FOUND,
+					"No se ha encontrado ningun producto con el id " + idProduct + ".");
 		}
+		return product;
 	}
-	
-	private String[] findByRangeDateRegisterValidateDate(String start, String end) {
-		if (PastleyValidate.isChain(start) && PastleyValidate.isChain(end)) {
-			PastleyDate date = new PastleyDate();
-			try {
-				String array_date[] = { date.formatToDateTime(date.convertToDate(start.replaceAll("-", "/")), null),
-						date.formatToDateTime(date.convertToDate(end.replaceAll("-", "/")), null) };
-				return array_date;
-			} catch (ParseException e) {
-				throw new PastleyException(HttpStatus.NOT_FOUND,
-						"El formato permitido para las fechas es: 'Año-Mes-Dia'.");
-			}
-		} else {
-			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido la fecha inicio o la fecha fin.");
-		}
+
+	private Sale saveToSave(Sale entity, int type) {
+		return entity;
+	}
+
+	private Sale saveToUpdate(Sale entity, int type) {
+		return entity;
 	}
 }

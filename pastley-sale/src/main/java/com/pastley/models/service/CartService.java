@@ -23,7 +23,7 @@ import com.pastley.models.repository.CartRepository;
  * @project Pastley-Sale.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
- * @contributors soleimygomez, leynerjoseoa, jhonatanbeltran.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @Service
@@ -48,8 +48,8 @@ public class CartService implements PastleyInterface<Long, Cart> {
 		cart.get().calculate();
 		return cart.orElse(null);
 	}
-
 	
+	@Transactional(readOnly = true)
 	public Cart findByCustomerAndProductAndStatu(boolean statu, Long idCustomer, Long idProduct) {
 		testCustomer(idCustomer);
 		testProduct(idProduct);
@@ -61,16 +61,19 @@ public class CartService implements PastleyInterface<Long, Cart> {
 		return cart;
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public List<Cart> findAll() {
 		return calculate(cartRepository.findAll());
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public List<Cart> findByStatuAll(boolean statu) {
 		return calculate(cartRepository.findByStatu(statu));
 	}
 
+	@Transactional(readOnly = true)
 	public List<Cart> findByCustomer(Long idCustomer) {
 		testCustomer(idCustomer);
 		return calculate(cartRepository.findByIdCustomer(idCustomer));
@@ -110,7 +113,7 @@ public class CartService implements PastleyInterface<Long, Cart> {
 	public Cart save(Cart entity, int type) {
 		if (entity == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido el cart.");
-		String message = entity.validate(false, false), messageType = saveToMessage(type);
+		String message = entity.validate(false), messageType = saveToMessage(type);
 		if (message != null)
 			throw new PastleyException(HttpStatus.NOT_FOUND,
 					"No se ha " + messageType + " el producto carrito, " + message);
@@ -145,7 +148,7 @@ public class CartService implements PastleyInterface<Long, Cart> {
 			if (findById(id) == null)
 				return true;
 		} catch (PastleyException e) {
-			LOGGER.error("[delete]: " + e.getMessage());
+			LOGGER.error("[delete(Long id)]", e);
 			return true;
 		}
 		throw new PastleyException(HttpStatus.NOT_FOUND,
@@ -156,6 +159,7 @@ public class CartService implements PastleyInterface<Long, Cart> {
 		try {
 			findByCustomerAndProductAndStatu(true, entity.getIdCustomer(), entity.getIdProduct());
 		} catch (Exception e) {
+			LOGGER.error("[saveToSave(Cart entity, int type)]", e);
 			PastleyDate date = new PastleyDate();
 			entity.setId(0L);
 			entity.setDateRegister(date.currentToDateTime(null));

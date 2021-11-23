@@ -101,10 +101,8 @@ public class Cart implements Serializable {
 		this.price = price;
 	}
 	
-	public String validate(boolean isId, boolean isPrice) {
+	public String validate(boolean isPrice) {
 		String chain = null;
-		if(isId && id <= 0)
-			chain = "El id del carrito debe ser mayor a cero.";
 		if(idProduct <= 0)
 			chain = "El id del producto debe ser mayor a cero.";
 		if(idCustomer <= 0)

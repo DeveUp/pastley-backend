@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
  * @project Pastley-Sale.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
- * @contributors soleimygomez, leynerjoseoa, jhonatanbeltran.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @Data
@@ -27,10 +27,6 @@ public class PersonModel implements Serializable {
 	private String address;
 	private String dateBirthday;
 	private Long idTypeDocument;
-
-	///////////////////////////////////////////////////////
-	// Builder
-	///////////////////////////////////////////////////////
 
 	public PersonModel(Long document, String name, String subname, String phone, String email, String address,
 			String dateBirthday, Long idTypeDocument) {

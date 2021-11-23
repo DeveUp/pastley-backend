@@ -64,10 +64,8 @@ public class Sale implements Serializable{
 	 * @param isId, Represents if you want to validate the id.
 	 * @return The error occurred.
 	 */
-	public String validate(boolean isId) {
+	public String validate() {
 		String chain = null;
-		if(isId && id <= 0)
-			chain = "El id de la venta debe ser mayor a cero.";
 		if(idCoustomer <= 0)
 			chain = "No se ha recibido el cliente de la venta.";
 		if(idMethodPay <= 0)

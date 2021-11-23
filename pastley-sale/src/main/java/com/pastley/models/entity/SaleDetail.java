@@ -47,10 +47,8 @@ public class SaleDetail implements Serializable {
 	 * @param isId, Represents if you want to validate the id.
 	 * @return A string with the error occurred.
 	 */
-	public String validate(boolean isId) {
+	public String validate() {
 		String chain = null;
-		if (isId && id <= 0)
-			chain = "El id del detalle de venta debe ser mayor a cero.";
 		if (idSale <= 0)
 			chain = "No has seleccionado la venta que esta asociada a este detalle.";
 		if (cart == null || cart.getId() <= 0)
