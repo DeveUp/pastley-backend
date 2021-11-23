@@ -1,7 +1,6 @@
 package com.pastley.models.service;
 
 import java.math.BigInteger;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -94,31 +93,15 @@ public class CartService implements PastleyInterface<Long, Cart> {
 	}
 
 	public List<Cart> findByRangeDateRegister(String start, String end) {
-		String array_date[] = findByRangeDateRegisterValidateDate(start, end);
+		String array_date[] = PastleyValidate.isRangeDateRegisterValidateDate(start, end);
 		return calculate(cartRepository.findByRangeDateRegister(array_date[0], array_date[1]));
 	}
 
 	public List<Cart> findByRangeDateRegisterAndCustomer(Long idCustomer, String start, String end) {
-		String array_date[] = findByRangeDateRegisterValidateDate(start, end);
+		String array_date[] = PastleyValidate.isRangeDateRegisterValidateDate(start, end);
 		return calculate(cartRepository.findByRangeDateRegisterAndCustomer(idCustomer, array_date[0], array_date[1]));
 	}
-
-	private String[] findByRangeDateRegisterValidateDate(String start, String end) {
-		if (PastleyValidate.isChain(start) && PastleyValidate.isChain(end)) {
-			PastleyDate date = new PastleyDate();
-			try {
-				String array_date[] = { date.formatToDateTime(date.convertToDate(start.replaceAll("-", "/")), null),
-						date.formatToDateTime(date.convertToDate(end.replaceAll("-", "/")), null) };
-				return array_date;
-			} catch (ParseException e) {
-				throw new PastleyException(HttpStatus.NOT_FOUND,
-						"El formato permitido para las fechas es: 'Año-Mes-Dia'.");
-			}
-		} else {
-			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido la fecha inicio o la fecha fin.");
-		}
-	}
-
+	
 	@Override
 	public Cart save(Cart entity) {
 		return null;

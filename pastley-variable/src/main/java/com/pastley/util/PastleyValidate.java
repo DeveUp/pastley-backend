@@ -2,8 +2,13 @@ package com.pastley.util;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.springframework.http.HttpStatus;
+
+import com.pastley.util.exception.PastleyException;
 
 /**
  * @project Pastley-Variable.
@@ -62,6 +67,28 @@ public class PastleyValidate implements Serializable {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * 
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public static String [] isRangeDateRegisterValidateDate(String start, String end) {
+		if (PastleyValidate.isChain(start) && PastleyValidate.isChain(end)) {
+			PastleyDate date = new PastleyDate();
+			try {
+				String array_date[] = { date.formatToDateTime(date.convertToDate(start.replaceAll("-", "/")), null),
+						date.formatToDateTime(date.convertToDate(end.replaceAll("-", "/")), null) };
+				return array_date;
+			} catch (ParseException e) {
+				throw new PastleyException(HttpStatus.NOT_FOUND,
+						"El formato permitido para las fechas es: 'Año-Mes-Dia'.");
+			}
+		} else {
+			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido la fecha inicio o la fecha fin.");
+		}
 	}
 
 	/**
