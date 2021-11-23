@@ -15,6 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pastley.model.entity.TypeDocument;
 import com.pastley.model.service.TypeDocumentService;
 
+/**
+ * @project Pastley-User.
+ * @author Leyner Jose Ortega Arias.
+ * @Github https://github.com/leynerjoseoa.
+ * @contributors serbuitrago.
+ * @version 1.0.0.
+ */
 @RestController
 @RequestMapping("typeDocument")
 public class TypeDocuementRest {
@@ -22,15 +29,6 @@ public class TypeDocuementRest {
 	@Autowired
 	TypeDocumentService typeDocumentService;
 
-	///////////////////////////////////////////////////////
-	// Method - Get
-	///////////////////////////////////////////////////////
-
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
 	@GetMapping(value = { "/find/id/{id}", "/{id}" })
 	public ResponseEntity<?> findById(@PathVariable("id") Long id) {
 		return ResponseEntity.status(HttpStatus.OK).body(typeDocumentService.findById(id));
@@ -41,10 +39,6 @@ public class TypeDocuementRest {
 		return ResponseEntity.status(HttpStatus.OK).body(typeDocumentService.findByName(name));
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
 	@GetMapping(value = { "", "/all" })
 	public ResponseEntity<?> findAll() {
 		return ResponseEntity.status(HttpStatus.OK).body(typeDocumentService.findAll());
@@ -52,18 +46,18 @@ public class TypeDocuementRest {
 	
 	@PostMapping()
 	public ResponseEntity<?> create(@RequestBody TypeDocument typeDocument) {
-		return ResponseEntity.status(HttpStatus.OK).body(typeDocumentService.save(typeDocument, (byte) 1));
+		return ResponseEntity.status(HttpStatus.OK).body(typeDocumentService.save(typeDocument, 1));
 	}
 	
 	@PutMapping()
 	public ResponseEntity<?> update(@RequestBody TypeDocument typeDocument) {
-		return ResponseEntity.status(HttpStatus.OK).body(typeDocumentService.save(typeDocument, (byte) 2));
+		return ResponseEntity.status(HttpStatus.OK).body(typeDocumentService.save(typeDocument, 2));
 	}
 	
 	@PutMapping(value = "/update/statu/{id}")
 	public ResponseEntity<?> updateStatu(@PathVariable("id") Long id) {
 		TypeDocument typeDocument = typeDocumentService.findById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(typeDocumentService.save(typeDocument, (byte) 3));
+		return ResponseEntity.status(HttpStatus.OK).body(typeDocumentService.save(typeDocument, 3));
 	}
 	
 	@DeleteMapping(value = "/{id}")

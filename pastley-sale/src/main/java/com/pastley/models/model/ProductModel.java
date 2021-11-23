@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
  * @project Pastley-Sale.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
- * @contributors soleimygomez, leynerjoseoa, jhonatanbeltran.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @Data
@@ -26,21 +26,11 @@ public class ProductModel implements Serializable {
 	private String name;
 	private BigInteger price;
 	private String discount;
-	
 	private int stock;
 	private String image;
-
-	///////////////////////////////////////////////////////
-	// Other
-	///////////////////////////////////////////////////////
 	private String vat;
-
 	private BigInteger priceVat;
 	private BigInteger priceDiscount;
-
-	///////////////////////////////////////////////////////
-	// Builder
-	///////////////////////////////////////////////////////
 
 	public ProductModel(Long id, String name, BigInteger price, String discount) {
 		this(id, name, price, discount, 0, null, null);
@@ -67,23 +57,15 @@ public class ProductModel implements Serializable {
 		this.image = image;
 		this.vat = vat;
 	}
-
-	///////////////////////////////////////////////////////
-	// Method - Validate
-	///////////////////////////////////////////////////////
+	
 	/**
 	 * Method that validates the attributes of the class.
 	 * 
 	 * @param isId, Represents if you want to validate the id.
 	 * @return The error occurred.
 	 */
-	public String validate(boolean isId) {
+	public String validate() {
 		String chain = null;
-		if (isId) {
-			if (id <= 0) {
-				chain = "El id del producto debe ser mayor a cero.";
-			}
-		}
 		if (!PastleyValidate.isChain(name)) {
 			chain = "El nombre del producto no es valido.";
 		}
@@ -105,9 +87,6 @@ public class ProductModel implements Serializable {
 		return chain;
 	}
 
-	///////////////////////////////////////////////////////
-	// Method - Calculate
-	///////////////////////////////////////////////////////
 	/**
 	 * Method that allows all prices to be calculated.
 	 */
@@ -181,9 +160,6 @@ public class ProductModel implements Serializable {
 		return (PastleyValidate.bigIntegerLessZero(price)) ? BigInteger.ZERO : price;
 	}
 
-	///////////////////////////////////////////////////////
-	// Method - Private
-	///////////////////////////////////////////////////////
 	/**
 	 * Method that allows you to convert a percentage into a price.
 	 * 

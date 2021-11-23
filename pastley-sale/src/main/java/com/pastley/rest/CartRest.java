@@ -1,9 +1,5 @@
 package com.pastley.rest;
 
-import java.io.Serializable;
-
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,13 +28,10 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
  */
 @RestController
 @RequestMapping("/cart")
-public class CartRest implements Serializable {
-
-	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = LoggerFactory.getLogger(CartService.class);
-
+public class CartRest {
+	
 	@Autowired
-	private CartService cartService;
+	CartService cartService;
 
 	/**
 	 * Method that allows you to check the cart for its id.
@@ -148,8 +141,7 @@ public class CartRest implements Serializable {
 	@CircuitBreaker(name = PastleyVariable.PASTLEY_CIRCUIT_BREAKER_INSTANCES_A, fallbackMethod = PastleyVariable.PASTLEY_CIRCUIT_BREAKER_FALLBACK_METHOD)
 	@PostMapping()
 	public ResponseEntity<Cart> create(@RequestBody Cart cart) {
-		LOGGER.info("Calling create cart.");
-		return ResponseEntity.status(HttpStatus.OK).body(cartService.save(cart, (byte) 1));
+		return ResponseEntity.status(HttpStatus.OK).body(cartService.save(cart, 1));
 	}
 	
 	/**
@@ -161,7 +153,7 @@ public class CartRest implements Serializable {
 	@CircuitBreaker(name = PastleyVariable.PASTLEY_CIRCUIT_BREAKER_INSTANCES_A, fallbackMethod = PastleyVariable.PASTLEY_CIRCUIT_BREAKER_FALLBACK_METHOD)
 	@PutMapping()
 	public ResponseEntity<?> update(@RequestBody Cart cart) {
-		return ResponseEntity.status(HttpStatus.OK).body(cartService.save(cart, (byte) 2));
+		return ResponseEntity.status(HttpStatus.OK).body(cartService.save(cart, 2));
 	}
 	
 	/**
@@ -174,7 +166,7 @@ public class CartRest implements Serializable {
 	@PutMapping(value = "/update/{id}/statu")
 	public ResponseEntity<?> updateStatu(@PathVariable("id") Long id) {
 		Cart cart = cartService.findById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(cartService.save(cart, (byte) 3));
+		return ResponseEntity.status(HttpStatus.OK).body(cartService.save(cart, 3));
 	}
 	
 	/**
@@ -188,7 +180,7 @@ public class CartRest implements Serializable {
 	public ResponseEntity<?> updateCount(@PathVariable("id") Long id, @PathVariable("count") int count) {
 		Cart cart = cartService.findById(id);
 		cart.setCount(cart.getCount() + count);
-		return ResponseEntity.status(HttpStatus.OK).body(cartService.save(cart, (byte) 4));
+		return ResponseEntity.status(HttpStatus.OK).body(cartService.save(cart, 4));
 	}
 	
 	/**

@@ -107,7 +107,7 @@ public class ProductService implements PastleyInterface<Long, Product> {
 				return true;
 			}
 		} catch (PastleyException e) {
-			LOGGER.error("[delete]: " + e.getMessage());
+			LOGGER.error("[delete(Long id)]", e);
 			return true;
 		}
 		throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha eliminado el producto con el id " + id + ".");
@@ -146,7 +146,7 @@ public class ProductService implements PastleyInterface<Long, Product> {
 		try {
 			product = findByName(name);
 		} catch (PastleyException e) {
-			LOGGER.error("[validateName(String name)]: " + e.getMessage());
+			LOGGER.error("[validateName(String name)]", e);
 		}
 		return (product == null) ? true : false;
 	}

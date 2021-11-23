@@ -9,7 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @project Pastley-Sale.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
- * @contributors soleimygomez, leynerjoseoa, jhonatanbeltran.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @SpringBootApplication
@@ -20,5 +20,4 @@ public class PastleySaleApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PastleySaleApplication.class, args);
 	}
-
 }

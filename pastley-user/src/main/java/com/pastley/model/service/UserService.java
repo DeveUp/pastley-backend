@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,11 +22,13 @@ import com.pastley.util.exception.PastleyException;
  * @project Pastley-User.
  * @author Leyner Jose Ortega Arias.
  * @Github https://github.com/leynerjoseoa.
- * @contributors soleimygomez, serbuitrago, jhonatanbeltran.
+ * @contributors serbuitrago.
  * @version 1.0.0.
  */
 @Service
 public class UserService implements PastleyInterface<Long, User> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
 	@Autowired
 	private UserRepository userDAO;
@@ -35,9 +39,6 @@ public class UserService implements PastleyInterface<Long, User> {
 	@Autowired
 	private PersonService personService;
 
-	/**
-	 * 
-	 */
 	@Override
 	public User findById(Long id) {
 		if (id <= 0)
@@ -69,19 +70,16 @@ public class UserService implements PastleyInterface<Long, User> {
 		return user;
 	}
 
-	/**
-	 * 
-	 */
 	@Override
 	public List<User> findAll() {
 		return userDAO.findAll();
 	}
 
-	/**
-	 * 
-	 * @param idRole
-	 * @return
-	 */
+	@Override
+	public List<User> findByStatuAll(boolean statu) {
+		return new ArrayList<>();
+	}
+
 	public List<User> findByIdRole(Long idRole) {
 		if (idRole <= 0)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del rol no es valido.");
@@ -89,11 +87,6 @@ public class UserService implements PastleyInterface<Long, User> {
 		return userDAO.findByIdRole(idRole);
 	}
 
-	/**
-	 * 
-	 * @param idPerson
-	 * @return
-	 */
 	public User findByDocumentPerson(Long documentPerson) {
 		if (documentPerson <= 0)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "El documento de la persona no es valido.");
@@ -104,40 +97,38 @@ public class UserService implements PastleyInterface<Long, User> {
 		return user;
 	}
 
-	/**
-	 * 
-	 */
 	@Override
 	public User save(User entity) {
 		return null;
 	}
 
-	public User save(User entity, Long idRole, byte type) {
-		if (entity != null) {
-			String message = entity.validate(false);
-			if (message == null) {
-				String message_type = (type == 1) ? "registrado" : (type == 2) ? "actualizado" : "actualizando estado";
-				if (type != 3) {
-					Person person = saveFindPerson(entity.getPerson().getDocument());
-					person = saveToPerson((person == null) ? entity.getPerson() : person,
-							(person == null) ? (byte) 1 : (byte) 2);
-				}
-				entity = (entity.getId() > 0) ? saveToUpdate(entity, idRole, type) : saveToSave(entity, idRole, type);
-				entity = userDAO.save(entity);
-				if (entity != null && type == 1)
-					entity = userDAO.createUserRole(entity.getId(), idRole);
-				if (entity == null)
-					throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + message_type + " usuario.");
-				return entity;
-			} else {
-				throw new PastleyException(HttpStatus.NOT_FOUND, message);
-			}
-		} else {
+	public User save(User entity, Long idRole, int type) {
+		if (entity == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido el usuario.");
+		String message = entity.validate();
+		if (message != null)
+			throw new PastleyException(HttpStatus.NOT_FOUND, message);
+		String message_type = PastleyValidate.messageToSave(type, false);
+		if (type != 3) {
+			Person person = saveFindPerson(entity.getPerson().getDocument());
+			person = saveToPerson((person == null) ? entity.getPerson() : person,
+					(person == null) ? (byte) 1 : (byte) 2);
 		}
+		entity = (entity.getId() > 0) ? saveToUpdate(entity, idRole, type) : saveToSave(entity, idRole, type);
+		entity = userDAO.save(entity);
+		if (entity != null && type == 1)
+			entity = userDAO.createUserRole(entity.getId(), idRole);
+		if (entity == null)
+			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + message_type + " usuario.");
+		return entity;
 	}
 
-	private User saveToSave(User entity, Long idRole, byte type) {
+	@Override
+	public boolean delete(Long id) {
+		return false;
+	}
+
+	private User saveToSave(User entity, Long idRole, int type) {
 		saveFindByNickname(entity.getNickname());
 		PastleyDate date = new PastleyDate();
 		entity.date(date.currentToDateTime(null), null);
@@ -146,19 +137,14 @@ public class UserService implements PastleyInterface<Long, User> {
 		return entity;
 	}
 
-	/**
-	 * 
-	 * @param entity
-	 * @param idRole
-	 * @param type
-	 * @return
-	 */
-	private User saveToUpdate(User entity, Long idRole, byte type) {
-		User user = findById(entity.getId());
+	private User saveToUpdate(User entity, Long idRole, int type) {
+		User user = null;
+		if (type != 3)
+			user = findById(entity.getId());
 		if (!entity.getNickname().equalsIgnoreCase(user.getNickname()))
 			saveFindByNickname(entity.getNickname());
 		PastleyDate date = new PastleyDate();
-		entity.date(user.getDateRegister(), date.currentToDateTime(null));
+		entity.date((type == 3) ? entity.getDateRegister() : user.getDateRegister(), date.currentToDateTime(null));
 		entity.is((type == 3) ? !user.isStatu() : user.isStatu(), user.isStatu());
 		return entity;
 	}
@@ -168,6 +154,7 @@ public class UserService implements PastleyInterface<Long, User> {
 		try {
 			user = findByNickName(nickname);
 		} catch (Exception e) {
+			LOGGER.error("[saveFindByNickname(String nickname)]", e);
 			user = null;
 		} finally {
 			if (user != null)
@@ -176,37 +163,16 @@ public class UserService implements PastleyInterface<Long, User> {
 		return null;
 	}
 
-	/**
-	 * 
-	 * @param documentPerson
-	 * @return
-	 */
 	private Person saveFindPerson(long documentPerson) {
 		try {
 			return personService.findByDocument(documentPerson);
 		} catch (Exception e) {
+			LOGGER.error("[saveFindPerson(long documentPerson)]", e);
 			return null;
 		}
 	}
 
-	/**
-	 * 
-	 * @param person
-	 * @param type
-	 * @return
-	 */
-	private Person saveToPerson(Person person, byte type) {
+	private Person saveToPerson(Person person, int type) {
 		return personService.save(person, type);
 	}
-
-	@Override
-	public boolean delete(Long id) {
-		return false;
-	}
-
-	@Override
-	public List<User> findByStatuAll(boolean statu) {
-		return new ArrayList<>();
-	}
-
 }

@@ -25,7 +25,7 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
  * @project Pastley-Sale.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
- * @contributors soleimygomez, leynerjoseoa, jhonatanbeltran.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @RestController
@@ -127,7 +127,7 @@ public class SaleRest implements Serializable {
 	@CircuitBreaker(name = PastleyVariable.PASTLEY_CIRCUIT_BREAKER_INSTANCES_A, fallbackMethod = PastleyVariable.PASTLEY_CIRCUIT_BREAKER_FALLBACK_METHOD)
 	@PostMapping()
 	public ResponseEntity<?> create(@RequestBody Sale sale) {
-		return ResponseEntity.status(HttpStatus.OK).body(saleService.save(sale, (byte) 1));
+		return ResponseEntity.status(HttpStatus.OK).body(saleService.save(sale, 1));
 	}
 	
 	/**
@@ -139,7 +139,7 @@ public class SaleRest implements Serializable {
 	@CircuitBreaker(name = PastleyVariable.PASTLEY_CIRCUIT_BREAKER_INSTANCES_A, fallbackMethod = PastleyVariable.PASTLEY_CIRCUIT_BREAKER_FALLBACK_METHOD)
 	@PutMapping()
 	public ResponseEntity<?> update(@RequestBody Sale sale) {
-		return ResponseEntity.status(HttpStatus.OK).body(saleService.save(sale, (byte) 2));
+		return ResponseEntity.status(HttpStatus.OK).body(saleService.save(sale, 2));
 	}
 	
 	/**
@@ -152,7 +152,7 @@ public class SaleRest implements Serializable {
 	@PutMapping(value = "/update/statu")
 	public ResponseEntity<?> updateStatu(@RequestBody Long id) {
 		Sale sale= saleService.findById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(saleService.save(sale, (byte) 3));
+		return ResponseEntity.status(HttpStatus.OK).body(saleService.save(sale, 3));
 	}
 	
 	/**

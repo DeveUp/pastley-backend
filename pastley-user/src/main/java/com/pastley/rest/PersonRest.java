@@ -19,7 +19,7 @@ import com.pastley.model.service.PersonService;
  * @project Pastley-User.
  * @author Leyner Jose Ortega Arias.
  * @Github https://github.com/leynerjoseoa.
- * @contributors soleimygomez, serbuitrago, jhonatanbeltran.
+ * @contributors serbuitrago.
  * @version 1.0.0.
  */
 @RestController
@@ -27,23 +27,13 @@ import com.pastley.model.service.PersonService;
 public class PersonRest {
 
 	@Autowired
-	private PersonService personService;
+	PersonService personService;
 	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
 	@GetMapping(value = { "/find/id/{id}", "/{id}" })
 	public ResponseEntity<?> findById(@PathVariable("id") Long id) {
 		return ResponseEntity.status(HttpStatus.OK).body(personService.findById(id));
 	}
 	
-	/**
-	 * 
-	 * @param document
-	 * @return
-	 */
 	@GetMapping(value = { "/find/document/{document}" })
 	public ResponseEntity<?> findByDocument(@PathVariable("document") Long document) {
 		return ResponseEntity.status(HttpStatus.OK).body(personService.findByDocument(document));
@@ -54,10 +44,6 @@ public class PersonRest {
 		return ResponseEntity.status(HttpStatus.OK).body(personService.findByEmail(email));
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
 	@GetMapping(value = { "", "/all" })
 	public ResponseEntity<?> findAll() {
 		return ResponseEntity.status(HttpStatus.OK).body(personService.findAll());
@@ -70,12 +56,12 @@ public class PersonRest {
 	
 	@PostMapping()
 	public ResponseEntity<?> create(@RequestBody Person person) {
-		return ResponseEntity.status(HttpStatus.OK).body(personService.save(person, (byte) 1));
+		return ResponseEntity.status(HttpStatus.OK).body(personService.save(person, 1));
 	}
 	
 	@PutMapping()
 	public ResponseEntity<?> update(@RequestBody Person person) {
-		return ResponseEntity.status(HttpStatus.OK).body(personService.save(person, (byte) 2));
+		return ResponseEntity.status(HttpStatus.OK).body(personService.save(person, 2));
 	}
 	
 	@DeleteMapping(value = "/{id}")

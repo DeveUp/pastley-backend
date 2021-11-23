@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.pastley.util.PastleyValidate;
+
 /**
  * @project Pastley-User.
  * @author Leyner Jose Ortega Arias.
@@ -53,13 +54,10 @@ public class Role implements Serializable {
 	/**
 	 * Method that validates the attributes of the class.
 	 * 
-	 * @param isId, Represents if you want to validate the id.
 	 * @return The error occurred.
 	 */
-	public String validate(boolean isId) {
+	public String validate() {
 		String chain = null;
-		if (isId && id <= 0)
-			chain = "El id del rol debe ser mayor a cero.";
 		if (!PastleyValidate.isChain(name))
 			chain = "El nombre del rol no es valido.";
 		return chain;

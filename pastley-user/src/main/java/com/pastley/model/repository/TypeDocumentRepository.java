@@ -9,10 +9,9 @@ import com.pastley.model.entity.TypeDocument;
  * @project Pastley-User.
  * @author Leyner Jose Ortega Arias.
  * @Github https://github.com/leynerjoseoa.
- * @contributors soleimygomez, serbuitrago, jhonatanbeltran.
+ * @contributors serbuitrago.
  * @version 1.0.0.
  */
-
 @Repository
 public interface TypeDocumentRepository extends JpaRepository<TypeDocument,Long> {
 	

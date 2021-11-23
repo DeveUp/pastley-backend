@@ -85,13 +85,10 @@ public class User implements Serializable {
 	/**
 	 * Method that validates the attributes of the class.
 	 * 
-	 * @param isId, Represents if you want to validate the id.
 	 * @return The error occurred.
 	 */
-	public String validate(boolean isId) {
+	public String validate() {
 		String chain = null;
-		if (isId && id <= 0)
-			chain = "El id del rol debe ser mayor a cero.";
 		if (!PastleyValidate.isChain(password)) 
 			chain = "La clave no es valida.";
 		if(!PastleyValidate.isChain(nickname))

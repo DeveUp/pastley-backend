@@ -51,10 +51,8 @@ public class MethodPay implements Serializable {
 	 * @param isId, Represents if you want to validate the id.
 	 * @return The error occurred.
 	 */
-	public String validate(boolean isId) {
+	public String validate() {
 		String chain = null;
-		if(isId && id <= 0)
-			chain = "El id del metodo de pago debe ser mayor a cero.";
 		if(!PastleyValidate.isChain(name))
 			chain = "El nombre del metodo de pago no es valido.";
 		return chain;

@@ -1,7 +1,5 @@
 package com.pastley.rest;
 
-import java.io.Serializable;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +23,10 @@ import com.pastley.models.service.SaleDetailService;
  */
 @RestController
 @RequestMapping("/saleDetail")
-public class SaleDetailRest implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class SaleDetailRest {
 	
 	@Autowired
-	private SaleDetailService saleDetailService;
+	SaleDetailService saleDetailService;
 
 	///////////////////////////////////////////////////////
 	// Method - Get
