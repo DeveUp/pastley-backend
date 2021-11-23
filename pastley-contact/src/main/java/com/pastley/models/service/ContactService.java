@@ -1,15 +1,15 @@
 package com.pastley.models.service;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.pastley.models.entity.Contact;
-import com.pastley.models.entity.TypePQR;
 import com.pastley.models.repository.ContactRepository;
 import com.pastley.util.PastleyDate;
 import com.pastley.util.PastleyInterface;
@@ -17,20 +17,22 @@ import com.pastley.util.PastleyValidate;
 import com.pastley.util.exception.PastleyException;
 
 /**
- * @project Pastley-Sale.
- * @author Soleimy Daniela Gomez Baron.
- * @Github https://github.com/Soleimygomez.
- * @contributors soleimygomez, leynerjoseoa, SerBuitragp jhonatanbeltran.
+ * @project Pastley-Contact.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/serbuitrago.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @Service
 public class ContactService implements PastleyInterface<Long, Contact> {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ContactService.class);
 
 	@Autowired
-	private ContactRepository contactRepository;
+    ContactRepository contactRepository;
 	
 	@Autowired
-	private TypePQRService typePQRService;
+    TypePQRService typePQRService;
 
 	@Override
 	public Contact findById(Long id) {
@@ -66,19 +68,8 @@ public class ContactService implements PastleyInterface<Long, Contact> {
 	}
 
 	public List<Contact> findByRangeDateRegister(String start, String end) {
-		if (PastleyValidate.isChain(start) && PastleyValidate.isChain(end)) {
-			PastleyDate date = new PastleyDate();
-			try {
-				String array_date[] = { date.formatToDateTime(date.convertToDate(start.replaceAll("-", "/")), null),
-						date.formatToDateTime(date.convertToDate(end.replaceAll("-", "/")), null) };
-				return contactRepository.findByRangeDateRegister(array_date[0], array_date[1]);
-			} catch (ParseException e) {
-				throw new PastleyException(HttpStatus.NOT_FOUND,
-						"El formato permitido para las fechas es: 'Año-Mes-Dia'.");
-			}
-		} else {
-			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido la fecha inicio o la fecha fin.");
-		}
+		String arrayDate[] = PastleyValidate.isRangeDateRegisterValidateDate(start, end);
+		return contactRepository.findByRangeDateRegister(arrayDate[0], arrayDate[1]);
 	}
 
 	@Override
@@ -86,28 +77,38 @@ public class ContactService implements PastleyInterface<Long, Contact> {
 		return null;
 	}
 	
-	public Contact save(Contact entity, byte type) {
-		if (entity != null) {
-			String message = entity.validate(false);
-			String messageType = (type == 1) ? "registrar"
-					: ((type == 2) ? "actualizar" : ((type == 3) ? "actualizar estado" : "n/a"));
-			if (message == null) {
-				TypePQR typePQR = typePQRService.findById(entity.getTypePqr().getId());
-				entity.setTypePqr(typePQR);
-				Contact contact = (entity.getId() != null && entity.getId() > 0) ? saveToUpdate(entity, type) : saveToSave(entity, type);
-				contact = contactRepository.save(contact);
-				if (contact == null)
-					throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " el contacto.");
-				return contact;
-			} else {
-				throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " el contacto, " + message + ".");
-			}
-		} else {
+	public Contact save(Contact entity, int type) {
+		if(entity == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido el contacto.");
-		}
+		String message = entity.validate(false);
+		String messageType = PastleyValidate.messageToSave(type, false);
+		if (message != null)
+			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " el contacto, " + message + ".");
+		if(type == 1 || type == 2)
+			entity.setTypePqr(typePQRService.findById(entity.getTypePqr().getId()));
+		Contact contact = (entity.getId() != null && entity.getId() > 0) ? saveToUpdate(entity, type) : saveToSave(entity, type);
+		contact = contactRepository.save(contact);
+		if (contact == null)
+			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " el contacto.");
+		return contact;
 	}
 	
-	public Contact saveToSave(Contact entity, byte type) {
+	@Override
+	public boolean delete(Long id) {
+		findById(id);
+		contactRepository.deleteById(id);
+		try {
+			if (findById(id) == null) {
+				return true;
+			}
+		} catch (Exception e) {
+			LOGGER.info("[delete]: "+e.getMessage());
+			return true;
+		}
+		throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha eliminado el contacto con el id " + id + ".");
+	}
+	
+	private Contact saveToSave(Contact entity, int type) {
 		PastleyDate date = new PastleyDate();
 		entity.setId(0L);
 		entity.setDateRegister(date.currentToDateTime(null));
@@ -116,26 +117,14 @@ public class ContactService implements PastleyInterface<Long, Contact> {
 		return entity;
 	}
 	
-	public Contact saveToUpdate(Contact entity, byte type) {
-		Contact contact = findById(entity.getId());
+	private Contact saveToUpdate(Contact entity, int type) {
+		Contact contact = null;
+		if(type != 3)
+			contact = findById(entity.getId());
 		PastleyDate date = new PastleyDate();
-		entity.setDateRegister(contact.getDateRegister());
+		entity.setDateRegister((type == 3) ? entity.getDateRegister(): contact.getDateRegister());
 		entity.setDateUpdate(date.currentToDateTime(null));
 		entity.setStatu((type == 3) ? !entity.isStatu() : entity.isStatu());
 		return entity;
-	}
-
-	@Override
-	public boolean delete(Long id) {
-		findById(id);
-		try {
-			contactRepository.deleteById(id);
-			if (findById(id) == null) {
-				return true;
-			}
-		} catch (Exception e) {
-			return true;
-		}
-		throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha eliminado el contacto con el id " + id + ".");
 	}
 }

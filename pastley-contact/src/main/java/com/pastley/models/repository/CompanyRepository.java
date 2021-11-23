@@ -7,12 +7,11 @@ import com.pastley.models.entity.Company;
 
 /**
  * @project Pastley-Contact.
- * @author Soleimy Daniela Gomez Baron.
- * @Github https://github.com/Soleimygomez.
- * @contributors soleimygomez, leynerjoseoa, SerBuitragp jhonatanbeltran.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/serbuitrago.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
-
 }
