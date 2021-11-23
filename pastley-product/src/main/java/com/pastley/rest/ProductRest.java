@@ -15,12 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pastley.model.entity.Product;
 import com.pastley.model.service.ProductService;
 
+/**
+ * @project Pastley-Product.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/SerBuitrago.
+ * @contributors leynerjoseoa.
+ * @version 1.0.0.
+ */
 @RestController
 @RequestMapping("/product")
 public class ProductRest {
 
 	@Autowired
-	private ProductService productService;
+	ProductService productService;
 
 	@GetMapping(value = { "/find/id/{id}", "/{id}" })
 	public ResponseEntity<?> findById(@PathVariable("id") Long id) {
@@ -59,18 +66,18 @@ public class ProductRest {
 
 	@PostMapping()
 	public ResponseEntity<?> create(@RequestBody Product product) {
-		return ResponseEntity.status(HttpStatus.OK).body(productService.save(product, (byte) 1));
+		return ResponseEntity.status(HttpStatus.OK).body(productService.save(product, 1));
 	}
 
 	@PutMapping()
 	public ResponseEntity<?> update(@RequestBody Product product) {
-		return ResponseEntity.status(HttpStatus.OK).body(productService.save(product, (byte) 2));
+		return ResponseEntity.status(HttpStatus.OK).body(productService.save(product, 2));
 	}
 
 	@PutMapping(value = "/update/statu/{id}")
 	public ResponseEntity<?> updateRoleStatu(@PathVariable("id") Long id) {
 		Product product = productService.findById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(productService.save(product, (byte) 3));
+		return ResponseEntity.status(HttpStatus.OK).body(productService.save(product, 3));
 	}
 
 	@DeleteMapping(value = "/{id}")

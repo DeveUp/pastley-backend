@@ -102,8 +102,7 @@ public class TypePQRService implements PastleyInterface<Long, TypePQR> {
 	public TypePQR save(TypePQR entity, int type) {
 		if (entity == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido el tipo de pqr.");
-
-		String message = entity.validate(false);
+		String message = entity.validate();
 		String messageType = PastleyValidate.messageToSave(type, false);
 		if (message != null)
 			throw new PastleyException(HttpStatus.NOT_FOUND,

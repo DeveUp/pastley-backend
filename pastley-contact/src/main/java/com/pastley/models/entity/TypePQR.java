@@ -49,10 +49,8 @@ public class TypePQR implements Serializable {
 	@Column(name = "date_update", nullable = true)
 	private String dateUpdate;
 
-	public String validate(boolean isId) {
+	public String validate() {
 		String chain = null;
-		if (isId && id <= 0)
-			chain = "El id del PQR debe ser mayor a cero.";
 		if (!PastleyValidate.isChain(name))
 			chain = "El nombre del PQR no es valido.";
 		return chain;

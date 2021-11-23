@@ -80,7 +80,7 @@ public class ContactService implements PastleyInterface<Long, Contact> {
 	public Contact save(Contact entity, int type) {
 		if(entity == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido el contacto.");
-		String message = entity.validate(false);
+		String message = entity.validate();
 		String messageType = PastleyValidate.messageToSave(type, false);
 		if (message != null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " el contacto, " + message + ".");

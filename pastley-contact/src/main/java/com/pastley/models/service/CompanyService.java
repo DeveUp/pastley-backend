@@ -66,7 +66,7 @@ public class CompanyService implements PastleyInterface<Long, Company> {
 	public Company save(Company entity, int type) {
 		if(entity == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido la empresa.");
-		String message = entity.validate(false);
+		String message = entity.validate();
 		String messageType = PastleyValidate.messageToSave(type, false);
 		if(message != null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " la empresa, " + message + ".");

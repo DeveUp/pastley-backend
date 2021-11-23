@@ -86,10 +86,8 @@ public class Company implements Serializable {
 	@Column(name = "date_update", nullable = true)
 	private String dateUpdate;
 
-	public String validate(boolean isId) {
+	public String validate() {
 		String chain = null;
-		if (isId && id <= 0)
-			chain = "El id del empresa debe ser mayor a cero.";
 		if (!PastleyValidate.isChain(name))
 			chain = "El nombre de la empresa no es valido.";
 		if (!PastleyValidate.isChain(address))

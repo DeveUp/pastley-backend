@@ -8,12 +8,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * @project Pastley-Product.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/SerBuitrago.
+ * @contributors leynerjoseoa.
+ * @version 1.0.0.
+ */
 @RestController
 @RequestMapping("/category")
 public class CategoryRest {
 	
     @Autowired
-    private CategoryService categoryService;
+    CategoryService categoryService;
     
 	@GetMapping(value = { "/find/id/{id}", "/{id}" })
 	public ResponseEntity<?> findById(@PathVariable("id") Long id) {
@@ -42,18 +49,18 @@ public class CategoryRest {
 
 	@PostMapping()
 	public ResponseEntity<?> create(@RequestBody Category role) {
-		return ResponseEntity.status(HttpStatus.OK).body(categoryService.save(role, (byte) 1));
+		return ResponseEntity.status(HttpStatus.OK).body(categoryService.save(role, 1));
 	}
 
 	@PutMapping()
 	public ResponseEntity<?> update(@RequestBody Category role) {
-		return ResponseEntity.status(HttpStatus.OK).body(categoryService.save(role, (byte) 2));
+		return ResponseEntity.status(HttpStatus.OK).body(categoryService.save(role, 2));
 	}
 	
 	@PutMapping(value = "/update/statu/{id}")
 	public ResponseEntity<?> updateRoleStatu(@PathVariable("id") Long id) {
 		Category category = categoryService.findById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(categoryService.save(category, (byte) 3));
+		return ResponseEntity.status(HttpStatus.OK).body(categoryService.save(category, 3));
 	}
 	
 	@DeleteMapping(value = "/{id}")
