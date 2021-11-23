@@ -102,7 +102,7 @@ public class ContactService implements PastleyInterface<Long, Contact> {
 				return true;
 			}
 		} catch (Exception e) {
-			LOGGER.info("[delete]: "+e.getMessage());
+			LOGGER.info("[delete(Long id)]", e);
 			return true;
 		}
 		throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha eliminado el contacto con el id " + id + ".");

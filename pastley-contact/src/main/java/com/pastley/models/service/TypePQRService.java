@@ -89,7 +89,7 @@ public class TypePQRService implements PastleyInterface<Long, TypePQR> {
 			return type.stream().map(tp -> new StatisticModel<TypePQR>(tp, findByStatisticTypePrivate(tp.getId())))
 					.collect(Collectors.toList());
 		} catch (Exception e) {
-			LOGGER.error("[findByStatisticTypeAll]: " + e.getMessage());
+			LOGGER.error("[findByStatisticTypeAll()]", e);
 			return new ArrayList<>();
 		}
 	}
@@ -128,7 +128,7 @@ public class TypePQRService implements PastleyInterface<Long, TypePQR> {
 				return true;
 			}
 		} catch (PastleyException e) {
-			LOGGER.error("[delete]: " + e.getMessage());
+			LOGGER.error("[delete(Long id)]", e);
 			return true;
 		}
 		throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha eliminado el tipo de pqr con el id " + id + ".");
@@ -167,7 +167,7 @@ public class TypePQRService implements PastleyInterface<Long, TypePQR> {
 		try {
 			type = findByName(name);
 		} catch (PastleyException e) {
-			LOGGER.error("[validateName(String name)]: " + e.getMessage());
+			LOGGER.error("[validateName(String name)]", e);
 			type = null;
 		}
 		return (type == null) ? true : false;

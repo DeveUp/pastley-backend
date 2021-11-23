@@ -17,7 +17,13 @@ import com.pastley.model.entity.User;
 import com.pastley.model.service.UserService;
 import com.pastley.util.PastleyVariable;
 
-
+/**
+ * @project Pastley-User.
+ * @author Leyner Jose Ortega Arias.
+ * @Github https://github.com/leynerjoseoa.
+ * @contributors serbuitrago.
+ * @version 1.0.0.
+ */
 @RestController
 @RequestMapping("user")
 public class UserRest implements Serializable {
@@ -27,80 +33,41 @@ public class UserRest implements Serializable {
 	@Autowired
 	private UserService userService;
 	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
 	@GetMapping(value = { "/find/id/{id}", "/{id}" })
 	public ResponseEntity<?> findById(@PathVariable("id") Long id) {
 		return ResponseEntity.status(HttpStatus.OK).body(userService.findById(id));
 	}
 	
-	/**
-	 * 
-	 * @param nickname
-	 * @return
-	 */
 	@GetMapping(value = { "/find/nickname/{nickname}"})
 	public ResponseEntity<?> findByNickname(@PathVariable("nickname") String nickname) {
 		return ResponseEntity.status(HttpStatus.OK).body(userService.findByNickName(nickname));
 	}
 	
-	/**
-	 * 
-	 * @param documentPerson
-	 * @return
-	 */
 	@GetMapping(value = {"/find/person/document/{documentPerson}"})
 	public ResponseEntity<?> findByDocumentPerson(@PathVariable("documentPerson") Long documentPerson) {
 		return ResponseEntity.status(HttpStatus.OK).body(userService.findByDocumentPerson(documentPerson));
 	}
 	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
 	@GetMapping(value = { "/find/cashier/id/{id}"})
 	public ResponseEntity<?> findByIdAndIdRolCashier(@PathVariable("id") Long id){
 		return ResponseEntity.status(HttpStatus.OK).body(userService.findByIdAndIdRol(id, PastleyVariable.PASTLEY_USER_CASHIER_ID));
 	}
 	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
 	@GetMapping(value = { "/find/customer/id/{id}"})
 	public ResponseEntity<?> findByIdAndIdRolCustomer(@PathVariable("id") Long id){
 		return ResponseEntity.status(HttpStatus.OK).body(userService.findByIdAndIdRol(id, PastleyVariable.PASTLEY_USER_CUSTOMER_ID));
 	}
-	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
+
 	@GetMapping(value = { "/find/administrator/id/{id}"})
 	public ResponseEntity<?> findByIdAndIdRolAdministrator(@PathVariable("id") Long id){
 		return ResponseEntity.status(HttpStatus.OK).body(userService.findByIdAndIdRol(id, PastleyVariable.PASTLEY_USER_ADMINISTRATOR_ID));
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	@GetMapping(value = {"", "/all"})
 	public ResponseEntity<?> findAll() {
 		return ResponseEntity.status(HttpStatus.OK).body(userService.findAll());
 	}
 	
-	/**
-	 * 
-	 * @param idRole
-	 * @return
-	 */
 	@GetMapping(value = {"/all/find/role/{idRole}"})
 	public ResponseEntity<?> findByIdRole(@PathVariable("idRole") Long idRole) {
 		return ResponseEntity.status(HttpStatus.OK).body(userService.findByIdRole(idRole));
@@ -108,42 +75,37 @@ public class UserRest implements Serializable {
 	
 	@PostMapping(value = "/customer")
 	public ResponseEntity<?> createCustomer(@RequestBody User user){
-		return ResponseEntity.status(HttpStatus.OK).body(userService.save(user, PastleyVariable.PASTLEY_USER_CUSTOMER_ID, (byte) 1));
+		return ResponseEntity.status(HttpStatus.OK).body(userService.save(user, PastleyVariable.PASTLEY_USER_CUSTOMER_ID, 1));
 	}
 	
 	@PostMapping(value = "/cashier")
 	public ResponseEntity<?> createCashier(@RequestBody User user){
-		return ResponseEntity.status(HttpStatus.OK).body(userService.save(user, PastleyVariable.PASTLEY_USER_CASHIER_ID, (byte) 1));
+		return ResponseEntity.status(HttpStatus.OK).body(userService.save(user, PastleyVariable.PASTLEY_USER_CASHIER_ID, 1));
 	}
 	
 	@PostMapping(value = "/administrator")
 	public ResponseEntity<?> createAdministrator(@RequestBody User user){
-		return ResponseEntity.status(HttpStatus.OK).body(userService.save(user, PastleyVariable.PASTLEY_USER_ADMINISTRATOR_ID, (byte) 1));
+		return ResponseEntity.status(HttpStatus.OK).body(userService.save(user, PastleyVariable.PASTLEY_USER_ADMINISTRATOR_ID, 1));
 	}
 	
 	@PutMapping(value = "/customer")
 	public ResponseEntity<?> updateCustomer(@RequestBody User user){
-		return ResponseEntity.status(HttpStatus.OK).body(userService.save(user, PastleyVariable.PASTLEY_USER_CUSTOMER_ID, (byte) 2));
+		return ResponseEntity.status(HttpStatus.OK).body(userService.save(user, PastleyVariable.PASTLEY_USER_CUSTOMER_ID, 2));
 	}
 	
 	@PutMapping(value = "/cashier")
 	public ResponseEntity<?> updateCashier(@RequestBody User user){
-		return ResponseEntity.status(HttpStatus.OK).body(userService.save(user, PastleyVariable.PASTLEY_USER_CASHIER_ID, (byte) 2));
+		return ResponseEntity.status(HttpStatus.OK).body(userService.save(user, PastleyVariable.PASTLEY_USER_CASHIER_ID, 2));
 	}
 	
 	@PutMapping(value = "/administrator")
 	public ResponseEntity<?> updateAdministrator(@RequestBody User user){
-		return ResponseEntity.status(HttpStatus.OK).body(userService.save(user, PastleyVariable.PASTLEY_USER_ADMINISTRATOR_ID, (byte) 2));
+		return ResponseEntity.status(HttpStatus.OK).body(userService.save(user, PastleyVariable.PASTLEY_USER_ADMINISTRATOR_ID, 2));
 	}
 	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
 	@PutMapping(value = "/update/statu/{id}")
 	public ResponseEntity<?> updateStatuCustomer(@PathVariable("id") Long id){
 		User user = userService.findById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(userService.save(user, 0L, (byte) 3));
+		return ResponseEntity.status(HttpStatus.OK).body(userService.save(user, 0L, 3));
 	}
 }

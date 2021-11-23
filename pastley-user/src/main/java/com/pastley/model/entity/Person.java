@@ -62,22 +62,18 @@ public class Person implements Serializable {
 
 	@Column(name = "date_update", nullable = true)
 	private String dateUpdate;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "id_type_document", nullable = false)
 	private TypeDocument typeDocument;
 
-
 	/**
 	 * Method that validates the attributes of the class.
 	 * 
-	 * @param isId, Represents if you want to validate the id.
 	 * @return The error occurred.
 	 */
-	public String validate(boolean isId) {
+	public String validate() {
 		String chain = null;
-		if (isId && id <= 0) 
-			chain = "El id de la persona debe ser mayor a cero.";
 		if (!PastleyValidate.isChain(name))
 			chain = "El nombre de la persona no es valido.";
 		if (!PastleyValidate.isChain(subname))
@@ -90,11 +86,10 @@ public class Person implements Serializable {
 			chain = "El email de la persona no cumple el formato de un email.";
 		if (document <= 0)
 			chain = "El documento de la persona no es valido.";
-		if (typeDocument != null && typeDocument.getId() <= 0) 
+		if (typeDocument != null && typeDocument.getId() <= 0)
 			chain = "El tipo de documento de la persona no es valido.";
 		return chain;
 	}
-	
 
 	/**
 	 * Convert variables to uppercase.

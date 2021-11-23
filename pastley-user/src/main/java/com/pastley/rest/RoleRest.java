@@ -20,7 +20,7 @@ import com.pastley.model.service.RoleService;
  * @project Pastley-User.
  * @author Leyner Jose Ortega Arias.
  * @Github https://github.com/leynerjoseoa.
- * @contributors soleimygomez, serbuitrago, jhonatanbeltran.
+ * @contributors serbuitrago.
  * @version 1.0.0.
  */
 @RestController
@@ -30,11 +30,6 @@ public class RoleRest {
 	@Autowired
 	private RoleService roleService;
 
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
 	@GetMapping(value = { "/find/id/{id}", "/{id}" })
 	public ResponseEntity<?> findById(@PathVariable("id") Long id) {
 		return ResponseEntity.status(HttpStatus.OK).body(roleService.findById(id));
@@ -45,10 +40,6 @@ public class RoleRest {
 		return ResponseEntity.status(HttpStatus.OK).body(roleService.findByName(name));
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	@GetMapping(value = { "", "/all" })
 	public ResponseEntity<?> findAll() {
 		return ResponseEntity.status(HttpStatus.OK).body(roleService.findAll());
@@ -56,18 +47,18 @@ public class RoleRest {
 
 	@PostMapping()
 	public ResponseEntity<?> create(@RequestBody Role role) {
-		return ResponseEntity.status(HttpStatus.OK).body(roleService.save(role, (byte) 1));
+		return ResponseEntity.status(HttpStatus.OK).body(roleService.save(role, 1));
 	}
 
 	@PutMapping()
 	public ResponseEntity<?> update(@RequestBody Role role) {
-		return ResponseEntity.status(HttpStatus.OK).body(roleService.save(role, (byte) 2));
+		return ResponseEntity.status(HttpStatus.OK).body(roleService.save(role, 2));
 	}
 	
 	@PutMapping(value = "/update/statu/{id}")
 	public ResponseEntity<?> updateRoleStatu(@PathVariable("id") Long id) {
 		Role role = roleService.findById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(roleService.save(role, (byte) 3));
+		return ResponseEntity.status(HttpStatus.OK).body(roleService.save(role, 3));
 	}
 	
 	

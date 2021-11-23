@@ -94,7 +94,7 @@ public class ContactResponseService implements PastleyInterface<Long, ContactRes
 				return true;
 			}
 		} catch (Exception e) {
-			LOGGER.info("[delete]: "+e.getMessage());
+			LOGGER.info("[delete(Long id)]", e);
 			return true;
 		}
 		throw new PastleyException(HttpStatus.NOT_FOUND,

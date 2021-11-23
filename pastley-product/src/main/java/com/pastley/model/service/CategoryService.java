@@ -102,7 +102,7 @@ public class CategoryService implements PastleyInterface<Long, Category> {
 				return true;
 			}
 		} catch (PastleyException e) {
-			LOGGER.error("[delete]: " + e.getMessage());
+			LOGGER.error("[delete(Long id)]", e);
 			return true;
 		}
 		throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha eliminado la categoria con el id " + id + ".");
@@ -141,7 +141,7 @@ public class CategoryService implements PastleyInterface<Long, Category> {
 		try {
 			category = findByName(name);
 		} catch (PastleyException e) {
-			LOGGER.error("[validateName(String name)]: " + e.getMessage());
+			LOGGER.error("[validateName(String name)]", e);
 		}
 		return (category == null) ? true : false;
 	}

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,17 +22,19 @@ import com.pastley.util.exception.PastleyException;
  * @project Pastley-User.
  * @author Leyner Jose Ortega Arias.
  * @Github https://github.com/leynerjoseoa.
- * @contributors soleimygomez, serbuitrago, jhonatanbeltran.
+ * @contributors serbuitrago.
  * @version 1.0.0.
  */
 @Service
 public class RoleService implements PastleyInterface<Long, Role> {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(RoleService.class);
+
 	@Autowired
-	private RoleRepository roleRepository;
-	
+	RoleRepository roleRepository;
+
 	@Autowired
-	private UserService userService;
+	UserService userService;
 
 	@Override
 	public Role findById(Long id) {
@@ -41,7 +45,7 @@ public class RoleService implements PastleyInterface<Long, Role> {
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No existe ningun rol con el id " + id + ".");
 		return role.orElse(null);
 	}
-	
+
 	public Role findByName(String name) {
 		if (!PastleyValidate.isChain(name))
 			throw new PastleyException(HttpStatus.NOT_FOUND, "EL nombre del rol  no es valido.");
@@ -56,69 +60,75 @@ public class RoleService implements PastleyInterface<Long, Role> {
 		return roleRepository.findAll();
 	}
 
-	/**
-	 * 
-	 */
+	@Override
+	public List<Role> findByStatuAll(boolean statu) {
+		return new ArrayList<>();
+	}
+
 	@Override
 	public Role save(Role entity) {
 		return null;
 	}
 
-	public Role save(Role entity, byte type) {
-		if (entity != null) {
-			String message = entity.validate(false);
-			String messageType = (type == 1) ? "registrar"
-					: ((type == 2) ? "actualizar" : ((type == 3) ? "actualizar estado" : "n/a"));
-			if (message == null) {
-				Role role = (entity.getId() != null && entity.getId() > 0) ? saveToUpdate(entity, type) : saveToSave(entity, type);
-				role = roleRepository.save(role);
-				if (role != null) {
-					return role;
-				} else {
-					throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " el rol.");
-				}
-			} else {
-				throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " el rol, " + message + ".");
-			}
-		} else {
+	public Role save(Role entity, int type) {
+		if (entity == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido el rol.");
-		}
+		String message = entity.validate();
+		String messageType = PastleyValidate.messageToSave(type, false);
+		if (message != null)
+			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " el rol, " + message + ".");
+		Role role = (entity.getId() != null && entity.getId() > 0) ? saveToUpdate(entity, type)
+				: saveToSave(entity, type);
+		role = roleRepository.save(role);
+		if (role == null)
+			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " el rol.");
+		return role;
 	}
 
-	private Role saveToSave(Role entity, byte type) {
-		if (validateName(entity.getName())) {
-			PastleyDate date = new PastleyDate();
-			entity.uppercase();
-			entity.setId(0L);
-			entity.setDateRegister(date.currentToDateTime(null));
-			entity.setDateUpdate(null);
-			entity.setStatu(true);
-		} else {
+	@Override
+	public boolean delete(Long id) {
+		findById(id);
+		List<User> list = userService.findByIdRole(id);
+		if (!list.isEmpty())
+			throw new PastleyException(HttpStatus.NOT_FOUND,
+					"No se ha eliminado el rol con el id  " + id + ", tiene asociado " + list.size() + " usuarios.");
+		roleRepository.deleteById(id);
+		try {
+			if (findById(id) == null) {
+				return true;
+			}
+		} catch (PastleyException e) {
+			LOGGER.error("[delete(Long id)]", e);
+			return true;
+		}
+		throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha eliminado el rol con el id " + id + ".");
+	}
+
+	private Role saveToSave(Role entity, int type) {
+		if (!validateName(entity.getName()))
 			throw new PastleyException(HttpStatus.NOT_FOUND,
 					"Ya existe un rol con el nombre " + entity.getName() + ".");
-		}
+		PastleyDate date = new PastleyDate();
+		entity.uppercase();
+		entity.setId(0L);
+		entity.setDateRegister(date.currentToDateTime(null));
+		entity.setDateUpdate(null);
+		entity.setStatu(true);
 		return entity;
 	}
 
-	private Role saveToUpdate(Role entity, byte type) {
-		Role role = findById(entity.getId());
-		if (role != null) {
-			boolean isName = (!role.getName().equalsIgnoreCase(entity.getName())) ? validateName(entity.getName())
-					: true;
-			if (isName) {
-				PastleyDate date = new PastleyDate();
-				entity.uppercase();
-				entity.setDateRegister(role.getDateRegister());
-				entity.setDateUpdate(date.currentToDateTime(null));
-				entity.setStatu((type == 3) ? !entity.isStatu() : entity.isStatu());
-			} else {
-				throw new PastleyException(HttpStatus.NOT_FOUND,
-						"Ya existe un rol con el nombre " + entity.getName() + ".");
-			}
-		} else {
+	private Role saveToUpdate(Role entity, int type) {
+		Role role = null;
+		if (type != 3)
+			role = findById(entity.getId());
+		if (!testName(entity.getName(), (type == 3 ? entity.getName() : role.getName())))
 			throw new PastleyException(HttpStatus.NOT_FOUND,
-					"No se ha encontrado rol con el id " + entity.getId() + ".");
-		}
+					"Ya existe un rol con el nombre " + entity.getName() + ".");
+		PastleyDate date = new PastleyDate();
+		entity.uppercase();
+		entity.setDateRegister((type == 3) ? entity.getDateRegister() : role.getDateRegister());
+		entity.setDateUpdate(date.currentToDateTime(null));
+		entity.setStatu((type == 3) ? !entity.isStatu() : entity.isStatu());
 		return entity;
 	}
 
@@ -127,30 +137,12 @@ public class RoleService implements PastleyInterface<Long, Role> {
 		try {
 			role = findByName(name);
 		} catch (PastleyException e) {
+			LOGGER.error("[validateName(String name)]", e);
 		}
 		return (role == null) ? true : false;
 	}
-	
-	@Override
-	public boolean delete(Long id) {
-		findById(id);
-		List<User> list  = userService.findByIdRole(id);
-		if(!list.isEmpty())
-			throw new PastleyException(HttpStatus.NOT_FOUND,
-					"No se ha eliminado el rol con el id  "+id +  ", tiene asociado "+list.size()+" usuarios.");
-		roleRepository.deleteById(id);
-		try {
-			if (findById(id) == null) {
-				return true;
-			}
-		} catch (PastleyException e) {
-			return true;
-		}
-		throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha eliminado el rol con el id " + id + ".");
-	}
 
-	@Override
-	public List<Role> findByStatuAll(boolean statu) {
-		return new ArrayList<>();
+	private boolean testName(String nameA, String nameB) {
+		return (!nameA.equalsIgnoreCase(nameB)) ? validateName(nameA) : true;
 	}
 }
