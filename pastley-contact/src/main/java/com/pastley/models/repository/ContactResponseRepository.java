@@ -11,28 +11,17 @@ import com.pastley.models.entity.ContactResponse;
 
 /**
  * @project Pastley-Contact.
- * @author Soleimy Daniela Gomez Baron.
- * @Github https://github.com/Soleimygomez.
- * @contributors soleimygomez, leynerjoseoa, SerBuitragp jhonatanbeltran.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/serbuitrago.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @Repository
 public interface ContactResponseRepository extends JpaRepository<ContactResponse, Long>{
 	
-	/**
-	 * 
-	 * @param idContact
-	 * @return
-	 */
 	@Query(nativeQuery = false, value = "SELECT cr FROM ContactResponse cr WHERE cr.contact.id = :idContact")
 	public List<ContactResponse> findByIdContact(Long idContact);
 	
-	/**
-	 * 
-	 * @param start
-	 * @param end
-	 * @return
-	 */
 	@Query(nativeQuery = false, value = "SELECT cr FROM ContactResponse cr WHERE cr.dateRegister BETWEEN :start AND :end ORDER BY cr.dateRegister")
 	public List<ContactResponse> findByRangeDateRegister(@Param("start") String start, @Param("end") String end);
 }

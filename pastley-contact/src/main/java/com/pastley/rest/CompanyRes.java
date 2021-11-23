@@ -16,25 +16,32 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pastley.models.entity.Company;
 import com.pastley.models.service.CompanyService;
 
+/**
+ * @project Pastley-Contact.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/serbuitrago.
+ * @contributors leynerjoseoa.
+ * @version 1.0.0.
+ */
 @RestController
 @RequestMapping("company")
-public class CompanyRes  implements Serializable{
+public class CompanyRes implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Autowired
-	private CompanyService companyService;
-	
-	@GetMapping(value = "/find/id/{id}")
+	CompanyService companyService;
+
+	@GetMapping(value = { "/{id}", "/find/id/{id}" })
 	public ResponseEntity<?> findById(@PathVariable("id") Long id) {
 		return ResponseEntity.status(HttpStatus.OK).body(companyService.findById(id));
 	}
 
 	@PutMapping()
 	public ResponseEntity<?> update(@RequestBody Company company) {
-		return ResponseEntity.status(HttpStatus.OK).body(companyService.save(company, (byte) 2));
+		return ResponseEntity.status(HttpStatus.OK).body(companyService.save(company,  2));
 	}
-	
+
 	@PutMapping(value = "/update/{id}/butdget/{butdget}")
 	public ResponseEntity<?> update(@PathVariable("id") Long id, @PathVariable("butdget") BigInteger butdget) {
 		return ResponseEntity.status(HttpStatus.OK).body(companyService.updateButdget(id, butdget));

@@ -13,13 +13,21 @@ import com.pastley.models.entity.Company;
 import com.pastley.models.repository.CompanyRepository;
 import com.pastley.util.PastleyDate;
 import com.pastley.util.PastleyInterface;
+import com.pastley.util.PastleyValidate;
 import com.pastley.util.exception.PastleyException;
 
+/**
+ * @project Pastley-Contact.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/serbuitrago.
+ * @contributors leynerjoseoa.
+ * @version 1.0.0.
+ */
 @Service
 public class CompanyService implements PastleyInterface<Long, Company> {
 
 	@Autowired
-	private CompanyRepository companyDao;
+	CompanyRepository companyDao;
 
 	@Override
 	public Company findById(Long id) {
@@ -52,45 +60,42 @@ public class CompanyService implements PastleyInterface<Long, Company> {
 		if(value == null)
 			value = BigInteger.ZERO;
 		company.setButdget(company.getButdget().add(value));
-		return save(company, (byte)2);
+		return save(company, 2);
 	}
 
-	public Company save(Company entity, byte type) {
-		if(entity != null) {
-			String message = entity.validate(false);
-			String messageType = (type == 1) ? "registrar"
-					: ((type == 2) ? "actualizar" : ((type == 3) ? "actualizar estado" : "n/a"));
-			if(message == null) {
-				Company company = (entity.getId() != null && entity.getId() > 0) ? saveToUpdate(entity, type) : saveToSave(entity, type);
-				company = companyDao.save(company);
-				if (company == null)
-					throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " la empresa.");
-				return company;
-			} else {
-				throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " la empresa, " + message + ".");
-			}
-		} else {
+	public Company save(Company entity, int type) {
+		if(entity == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido la empresa.");
-		}
-	}
-
-	public Company saveToSave(Company entity, byte type) {
-		return entity;
-	}
-
-	public Company saveToUpdate(Company entity, byte type) {
-		Company company = findById(entity.getId());
-		PastleyDate date = new PastleyDate();
-		entity.uppercase();
-		entity.update(company);
-		entity.setDateRegister(company.getDateRegister());
-		entity.setDateUpdate(date.currentToDateTime(null));
-		entity.setStatu((type == 3) ? !entity.isStatu() : entity.isStatu());
-		return entity;
+		String message = entity.validate(false);
+		String messageType = PastleyValidate.messageToSave(type, false);
+		if(message != null)
+			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " la empresa, " + message + ".");
+		Company company = (entity.getId() != null && entity.getId() > 0) ? saveToUpdate(entity, type) : saveToSave(entity, type);
+		company = companyDao.save(company);
+		if (company == null)
+			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " la empresa.");
+		return company;
 	}
 
 	@Override
 	public boolean delete(Long id) {
 		return false;
+	}
+	
+	private Company saveToSave(Company entity, int type) {
+		return entity;
+	}
+
+	private Company saveToUpdate(Company entity, int type) {
+		Company company = null;
+		if(type != 3)
+			company = findById(entity.getId());
+		PastleyDate date = new PastleyDate();
+		entity.uppercase();
+		entity.update(company);
+		entity.setDateRegister((type == 3) ? entity.getDateRegister(): company.getDateRegister());
+		entity.setDateUpdate(date.currentToDateTime(null));
+		entity.setStatu((type == 3) ? !entity.isStatu() : entity.isStatu());
+		return entity;
 	}
 }

@@ -16,6 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pastley.models.entity.TypePQR;
 import com.pastley.models.service.TypePQRService;
 
+/**
+ * @project Pastley-Contact.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/serbuitrago.
+ * @contributors leynerjoseoa.
+ * @version 1.0.0.
+ */
 @RestController
 @RequestMapping("typePqr")
 public class TypePQRRes implements Serializable{
@@ -23,114 +30,59 @@ public class TypePQRRes implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Autowired
-	private TypePQRService typePQRService;
+	TypePQRService typePQRService;
 
-
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
 	@GetMapping(value = { "/find/id/{id}", "{id}" })
 	public ResponseEntity<?> findById(@PathVariable("id") Long id) {
 		return ResponseEntity.status(HttpStatus.OK).body(typePQRService.findById(id));
 	}
 
-	/**
-	 * 
-	 * @param name
-	 * @return
-	 */
 	@GetMapping(value = { "/find/name/{name}" })
 	public ResponseEntity<?> findByName(@PathVariable("name") String name) {
 		return ResponseEntity.status(HttpStatus.OK).body(typePQRService.findByName(name));
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	@GetMapping(value = {"", "/all"})
 	public ResponseEntity<?> findAll() {
 		return ResponseEntity.status(HttpStatus.OK).body(typePQRService.findAll());
 	}
 	
-	/**
-	 * 
-	 * @param statu
-	 * @return
-	 */
 	@GetMapping(value = "/all/find/statu/{statu}")
 	public ResponseEntity<?> findByStatuAll(@PathVariable("statu") Boolean statu) {
 		return ResponseEntity.status(HttpStatus.OK).body(typePQRService.findByStatuAll(statu));
 	}
 	
-	/**
-	 * 
-	 * @param start
-	 * @param end
-	 * @return
-	 */
 	@GetMapping(value = "/range/all/find/date/register/{start}/{end}")
 	public ResponseEntity<?> findByRangeDateRegister(@PathVariable("start") String start, @PathVariable("end") String end) {
 		return ResponseEntity.status(HttpStatus.OK).body(typePQRService.findByRangeDateRegister(start, end));
 	}
 	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
 	@GetMapping(value = "/statistic/find/type/{id}")
 	public ResponseEntity<?> findByStatisticSale(@PathVariable Long id) {
 		return ResponseEntity.status(HttpStatus.OK).body(typePQRService.findByStatisticType(id));
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	@GetMapping(value = "/statistic/all/find/type")
 	public ResponseEntity<?> findByStatisticSaleAll() {
 		return ResponseEntity.status(HttpStatus.OK).body(typePQRService.findByStatisticTypeAll());
 	}
 
-	/**
-	 * 
-	 * @param method
-	 * @return
-	 */
 	@PostMapping()
 	public ResponseEntity<?> create(@RequestBody TypePQR type) {
-		return ResponseEntity.status(HttpStatus.OK).body(typePQRService.save(type, (byte)1));
+		return ResponseEntity.status(HttpStatus.OK).body(typePQRService.save(type, 1));
 	}
 
-	/**
-	 * 
-	 * @param type
-	 * @return
-	 */
 	@PutMapping()
 	public ResponseEntity<?> update(@RequestBody TypePQR type) {
-		return ResponseEntity.status(HttpStatus.OK).body(typePQRService.save(type, (byte)2));
+		return ResponseEntity.status(HttpStatus.OK).body(typePQRService.save(type, 2));
 	}
 	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
 	@PutMapping(value = "/update/statu/{id}")
 	public ResponseEntity<?> updateStatu(@PathVariable("id") Long id) {
 		TypePQR type = typePQRService.findById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(typePQRService.save(type, (byte)3));
+		return ResponseEntity.status(HttpStatus.OK).body(typePQRService.save(type, 3));
 	}
 	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 		return ResponseEntity.status(HttpStatus.OK).body(typePQRService.delete(id));

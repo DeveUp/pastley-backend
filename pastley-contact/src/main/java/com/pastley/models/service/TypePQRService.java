@@ -6,11 +6,13 @@ import com.pastley.util.PastleyValidate;
 
 import org.springframework.http.HttpStatus;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +21,17 @@ import com.pastley.models.model.StatisticModel;
 import com.pastley.models.repository.TypePQRRepository;
 import com.pastley.util.exception.PastleyException;
 
+/**
+ * @project Pastley-Contact.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/serbuitrago.
+ * @contributors leynerjoseoa.
+ * @version 1.0.0.
+ */
 @Service
 public class TypePQRService implements PastleyInterface<Long, TypePQR> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(TypePQRService.class);
 
 	@Autowired
 	TypePQRRepository typePQRRepository;
@@ -57,28 +68,15 @@ public class TypePQRService implements PastleyInterface<Long, TypePQR> {
 	}
 
 	public List<TypePQR> findByRangeDateRegister(String start, String end) {
-		if (PastleyValidate.isChain(start) && PastleyValidate.isChain(end)) {
-			PastleyDate date = new PastleyDate();
-			try {
-				String array_date[] = { date.formatToDateTime(date.convertToDate(start.replaceAll("-", "/")), null),
-						date.formatToDateTime(date.convertToDate(end.replaceAll("-", "/")), null) };
-				return typePQRRepository.findByRangeDateRegister(array_date[0], array_date[1]);
-			} catch (ParseException e) {
-				throw new PastleyException(HttpStatus.NOT_FOUND,
-						"El formato permitido para las fechas es: 'Año-Mes-Dia'.");
-			}
-		} else {
-			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido la fecha inicio o la fecha fin.");
-		}
+		String arrayDate[] = PastleyValidate.isRangeDateRegisterValidateDate(start, end);
+		return typePQRRepository.findByRangeDateRegister(arrayDate[0], arrayDate[1]);
 	}
 
 	private Long findByStatisticTypePrivate(Long id) {
-		if (id > 0) {
-			Long count = typePQRRepository.countByTypePQR(id);
-			return count == null ? 0L : count;
-		} else {
-			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del Typo de PQR no es valido.");
-		}
+		if (id <= 0)
+			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del tipo de pqr no es valido.");
+		Long count = typePQRRepository.countByTypePQR(id);
+		return count == null ? 0L : count;
 	}
 
 	public StatisticModel<TypePQR> findByStatisticType(Long id) {
@@ -87,13 +85,11 @@ public class TypePQRService implements PastleyInterface<Long, TypePQR> {
 
 	public List<StatisticModel<TypePQR>> findByStatisticTypeAll() {
 		try {
-			List<TypePQR> methods = typePQRRepository.findByStatu(true);
-			List<StatisticModel<TypePQR>> list = new ArrayList<>();
-			for (TypePQR mp : methods) {
-				list.add(new StatisticModel<TypePQR>(mp, findByStatisticTypePrivate(mp.getId())));
-			}
-			return list;
+			List<TypePQR> type = typePQRRepository.findByStatu(true);
+			return type.stream().map(tp -> new StatisticModel<TypePQR>(tp, findByStatisticTypePrivate(tp.getId())))
+					.collect(Collectors.toList());
 		} catch (Exception e) {
+			LOGGER.error("[findByStatisticTypeAll]: " + e.getMessage());
 			return new ArrayList<>();
 		}
 	}
@@ -103,59 +99,67 @@ public class TypePQRService implements PastleyInterface<Long, TypePQR> {
 		return null;
 	}
 
-	public TypePQR save(TypePQR entity, byte type) {
-		if (entity != null) {
-			String message = entity.validate(false);
-			String messageType = (type == 1) ? "registrar"
-					: ((type == 2) ? "actualizar" : ((type == 3) ? "actualizar estado" : "n/a"));
-			if (message == null) {
-				TypePQR typePqr = (entity.getId() != null && entity.getId() > 0) ? saveToUpdate(entity, type) : saveToSave(entity, type);
-				typePqr = typePQRRepository.save(typePqr);
-				if (typePqr == null)
-					throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " el tipo pqr.");
-				return typePqr;
-			} else {
-				throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " el tipo pqr, " + message + ".");
-			}
-		} else {
+	public TypePQR save(TypePQR entity, int type) {
+		if (entity == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido el tipo de pqr.");
-		}
+
+		String message = entity.validate(false);
+		String messageType = PastleyValidate.messageToSave(type, false);
+		if (message != null)
+			throw new PastleyException(HttpStatus.NOT_FOUND,
+					"No se ha " + messageType + " el tipo pqr, " + message + ".");
+		TypePQR typePqr = (entity.getId() != null && entity.getId() > 0) ? saveToUpdate(entity, type)
+				: saveToSave(entity, type);
+		typePqr = typePQRRepository.save(typePqr);
+		if (typePqr == null)
+			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " el tipo pqr.");
+		return typePqr;
 	}
 
-	private TypePQR saveToSave(TypePQR entity, byte type) {
-		if (validateName(entity.getName())) {
-			PastleyDate date = new PastleyDate();
-			entity.uppercase();
-			entity.setId(0L);
-			entity.setDateRegister(date.currentToDateTime(null));
-			entity.setDateUpdate(null);
-			entity.setStatu(true);
-		} else {
+	@Override
+	public boolean delete(Long id) {
+		findById(id);
+		Long count = findByStatisticTypePrivate(id);
+		if (count != null && count > 0L)
+			throw new PastleyException(HttpStatus.NOT_FOUND,
+					"No se ha eliminado el tipo de pqr con el id " + id + ", tiene asociado " + count + " contactos.");
+		typePQRRepository.deleteById(id);
+		try {
+			if (findById(id) == null) {
+				return true;
+			}
+		} catch (PastleyException e) {
+			LOGGER.error("[delete]: " + e.getMessage());
+			return true;
+		}
+		throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha eliminado el tipo de pqr con el id " + id + ".");
+	}
+
+	private TypePQR saveToSave(TypePQR entity, int type) {
+		if (!validateName(entity.getName()))
 			throw new PastleyException(HttpStatus.NOT_FOUND,
 					"Ya existe un tipo de pqr con el nombre " + entity.getName() + ".");
-		}
+		PastleyDate date = new PastleyDate();
+		entity.uppercase();
+		entity.setId(0L);
+		entity.setDateRegister(date.currentToDateTime(null));
+		entity.setDateUpdate(null);
+		entity.setStatu(true);
 		return entity;
 	}
 
-	private TypePQR saveToUpdate(TypePQR entity, byte type) {
-		TypePQR typePqr = findById(entity.getId());
-		if (typePqr != null) {
-			boolean isName = (!typePqr.getName().equalsIgnoreCase(entity.getName())) ? validateName(entity.getName())
-					: true;
-			if (isName) {
-				PastleyDate date = new PastleyDate();
-				entity.uppercase();
-				entity.setDateRegister(typePqr.getDateRegister());
-				entity.setDateUpdate(date.currentToDateTime(null));
-				entity.setStatu((type == 3) ? !entity.isStatu() : entity.isStatu());
-			} else {
-				throw new PastleyException(HttpStatus.NOT_FOUND,
-						"Ya existe un tipo de pqr con el nombre " + entity.getName() + ".");
-			}
-		} else {
+	private TypePQR saveToUpdate(TypePQR entity, int type) {
+		TypePQR typePqr = null;
+		if (type != 3)
+			typePqr = findById(entity.getId());
+		if (!testName(entity.getName(), (type == 3) ? entity.getName() : typePqr.getName()))
 			throw new PastleyException(HttpStatus.NOT_FOUND,
-					"No se ha encontrado ningun tipo de pqr con el id " + entity.getId() + ".");
-		}
+					"Ya existe un tipo de pqr con el nombre " + entity.getName() + ".");
+		PastleyDate date = new PastleyDate();
+		entity.uppercase();
+		entity.setDateRegister((type == 3) ? entity.getDateRegister() : typePqr.getDateRegister());
+		entity.setDateUpdate(date.currentToDateTime(null));
+		entity.setStatu((type == 3) ? !entity.isStatu() : entity.isStatu());
 		return entity;
 	}
 
@@ -164,28 +168,13 @@ public class TypePQRService implements PastleyInterface<Long, TypePQR> {
 		try {
 			type = findByName(name);
 		} catch (PastleyException e) {
+			LOGGER.error("[validateName(String name)]: " + e.getMessage());
 			type = null;
 		}
 		return (type == null) ? true : false;
 	}
 
-	@Override
-	public boolean delete(Long id) {
-		findById(id);
-		Long count = findByStatisticTypePrivate(id);
-		if (count == 0L) {
-			typePQRRepository.deleteById(id);
-			try {
-				if (findById(id) == null) {
-					return true;
-				}
-			} catch (PastleyException e) {
-				return true;
-			}
-		} else {
-			throw new PastleyException(HttpStatus.NOT_FOUND,
-					"No se ha eliminado el tipo de pqr con el id " + id + ", tiene asociado " + count + " contactos.");
-		}
-		throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha eliminado el tipo de pqr con el id " + id + ".");
+	private boolean testName(String nameA, String nameB) {
+		return (!nameA.equalsIgnoreCase(nameB)) ? validateName(nameA) : true;
 	}
 }

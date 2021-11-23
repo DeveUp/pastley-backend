@@ -90,6 +90,34 @@ public class PastleyValidate implements Serializable {
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido la fecha inicio o la fecha fin.");
 		}
 	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @param plural
+	 * @return
+	 */
+	public static String messageToSave(int type, boolean plural) {
+		String message = null;
+		switch (type) {
+		case 1:
+			message = "registrado";
+			break;
+		case 2:
+			message = "actualizado";
+			break;
+		case 3:
+			message = "actualizado el estado";
+			break;
+		case 4:
+			message = "actualizando cantidad";
+			break;
+		default:
+			message = "n/a";
+			break;
+		}
+		return message;
+	}
 
 	/**
 	 * Method that allows you to convert a string to uppercase.
