@@ -22,6 +22,10 @@ spring:
           uri: lb://pastley-sale
           predicates:
             - Path=/sale/**,/saleDetail/**,/method/**,/cart/**
+        - id: pastley-buy
+          uri: lb://pastley-buy
+          predicates:
+            - Path=/provider/**,/buy/**
         - id: pastley-user
           uri: lb://pastley-user
           predicates:
