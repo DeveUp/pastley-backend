@@ -8,8 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import com.pastley.util.PastleyValidate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -56,6 +60,10 @@ public class BuyDetail implements Serializable{
 	@Column(name = "subtotal_gross", nullable = false)
 	private BigInteger subtotalGross;
 	
+	@ManyToOne
+	@JoinColumn(name = "id_buy")
+	private Buy buy;
+	
 	@Transient
 	private BigInteger otherPriceVat;
 	@Transient 
@@ -71,6 +79,16 @@ public class BuyDetail implements Serializable{
 	
 	public String validate() {
 		String message = null;
+		if(!PastleyValidate.isChain(discount))
+			message = "El descuento no es valido.";
+		if(!PastleyValidate.isChain(vat))
+			message = "El vat no es valido.";
+		if(count<=0)
+			message = "El cotador no es valido.";
+		if(!PastleyValidate.bigIntegerHigherZero(subtotalNet))
+			message = "El subtotal neto no es valido.";
+		if(!PastleyValidate.bigIntegerHigherZero(subtotalGross))
+			message = "El subtotal bruto no es valido.";
 		return message;
 	}
 }

@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.pastley.util.PastleyValidate;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -65,6 +67,14 @@ public class Buy implements Serializable{
 	
 	public String validate() {
 		String message= null;
+		if (!PastleyValidate.isChain(iva))
+			message = "El IVA del producto no es valido.";
+		if(provider == null || !PastleyValidate.isLong(provider.getId()))
+			message = "El id del proveedor no es valido.";
+		if (!PastleyValidate.bigIntegerHigherZero(totalNet))
+			message = "El total neto no es valido.";
+		if (!PastleyValidate.bigIntegerHigherZero(totalGross))
+			message = "El total bruto no es valido.";
 		return message;
 	}
 }
