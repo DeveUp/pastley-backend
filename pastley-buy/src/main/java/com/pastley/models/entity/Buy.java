@@ -2,6 +2,7 @@ package com.pastley.models.entity;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -56,4 +58,13 @@ public class Buy implements Serializable{
 	
 	@Column(name="date_update", nullable = true)
 	private String dateUpdate;
+	
+	@Transient
+	private List<BuyDetail> details;
+	
+	
+	public String validate() {
+		String message= null;
+		return message;
+	}
 }

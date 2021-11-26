@@ -67,4 +67,11 @@ public class BuyDetail implements Serializable{
 	private BigInteger otherPriceSubPriceDisount;
 	@Transient 
 	private BigInteger otherSubtotalPriceDisount;
+	
+	
+	public String validate() {
+		String message = null;
+		return message;
+	}
 }
+

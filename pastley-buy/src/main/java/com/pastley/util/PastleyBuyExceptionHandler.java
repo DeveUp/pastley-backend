@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import com.pastley.util.exception.PastleyExceptionHandler;
 
 /**
- * @project Pastley-Variable.
+ * @project Pastley-Buy.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
  * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @ControllerAdvice
-public class PastleyBuyExceptionHandler  extends PastleyExceptionHandler{
+public class PastleyBuyExceptionHandler extends PastleyExceptionHandler{
 }

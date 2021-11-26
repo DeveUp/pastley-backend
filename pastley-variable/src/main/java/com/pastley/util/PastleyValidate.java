@@ -3,6 +3,7 @@ package com.pastley.util;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.text.ParseException;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,6 +31,14 @@ public class PastleyValidate implements Serializable {
 	 */
 	public static boolean isChain(String chain) {
 		return chain != null && chain.trim().length() > 0;
+	}
+	
+	public static boolean isLong(Long value) {
+		return value != null && value > 0;
+	}
+	
+	public static <T> boolean isList(List<T> list) {
+		return list != null && !list.isEmpty();
 	}
 
 	/**

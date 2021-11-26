@@ -56,6 +56,8 @@ public class Provider implements Serializable{
 	
 	public String validate() {
 		String message = null;
+		if(!PastleyValidate.isChain(name))
+			message = "El campo nombre es obligatorio.";
 		return message;
 	}
 	
