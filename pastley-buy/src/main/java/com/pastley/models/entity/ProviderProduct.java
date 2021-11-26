@@ -9,10 +9,17 @@ import javax.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "provider_product")
+/**
+ * @project Pastley-Buy.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/SerBuitrago.
+ * @contributors leynerjoseoa.
+ * @version 1.0.0.
+ */
 @Data
 @NoArgsConstructor
+@Entity
+@Table(name = "provider_product")
 public class ProviderProduct implements Serializable{
 	
 	private static final long serialVersionUID = 1L;

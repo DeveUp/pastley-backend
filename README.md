@@ -9,7 +9,7 @@
 Sistema ERP que permite gestionar una pastelería automatización en las ventas de los productos y la centralización de los mismos en un catálogo virtual que esté disponible las 24 horas para todo el público y que desde ahí mismo se puedan realizar pedidos con esto se logra reducir los tiempos de ventas y tener una mayor confiabilidad.
 
 ## Documentación
-[Documentation](https://drive.google.com/file/d/1z73tLfO8bVCXkmsOkv2Q_f2uBGTyNW_P/view?usp=sharing)
+[Documentation](https://docs.google.com/document/d/1iZfSTJVwVo4wHyQQBKD0VTKLjdQReGbr/edit?usp=sharing&ouid=112450542537513469552&rtpof=true&sd=true)
 
 
 ## Microservicios
