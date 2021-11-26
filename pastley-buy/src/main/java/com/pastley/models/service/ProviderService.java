@@ -59,15 +59,15 @@ public class ProviderService implements PastleyInterface<Long, Provider> {
 	public List<Provider> findByStatuAll(boolean statu) {
 		return providerRepository.findByStatu(statu);
 	}
-
-	@Override
-	public Provider save(Provider entity) {
-		return null;
-	}
 	
 	public List<Provider> findByRangeDateRegister(String start, String end) {
 		String arrayDate[] = PastleyValidate.isRangeDateRegisterValidateDate(start, end);
 		return providerRepository.findByRangeDateRegister(arrayDate[0], arrayDate[1]);
+	}
+
+	@Override
+	public Provider save(Provider entity) {
+		return null;
 	}
 	
 	public Provider save(Provider entity, int type) {
