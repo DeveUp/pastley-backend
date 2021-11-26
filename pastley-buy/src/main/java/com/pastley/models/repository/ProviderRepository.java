@@ -23,6 +23,6 @@ public interface ProviderRepository  extends JpaRepository<Provider, Long>{
 	
 	public List<Provider> findByStatu(boolean statu);
 	
-	@Query(nativeQuery = false, value = "SELECT p FROM Provider p WHERE c.dateRegister BETWEEN :start AND :end ORDER BY c.dateRegister")
+	@Query(nativeQuery = false, value = "SELECT p FROM Provider p WHERE p.dateRegister BETWEEN :start AND :end ORDER BY p.dateRegister")
 	public List<Provider> findByRangeDateRegister(@Param("start") String start, @Param("end") String end);
 }
