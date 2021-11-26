@@ -14,10 +14,17 @@ import javax.persistence.Transient;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "buy_detail")
+/**
+ * @project Pastley-Buy.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/SerBuitrago.
+ * @contributors leynerjoseoa.
+ * @version 1.0.0.
+ */
 @Data
 @NoArgsConstructor
+@Entity
+@Table(name = "buy_detail")
 public class BuyDetail implements Serializable{
 
 	private static final long serialVersionUID = 1L;

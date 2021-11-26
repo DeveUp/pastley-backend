@@ -10,6 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pastley.models.service.BuyService;
 
+/**
+ * @project Pastley-Buy.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/SerBuitrago.
+ * @contributors leynerjoseoa.
+ * @version 1.0.0.
+ */
 @RestController()
 @RequestMapping("/buy")
 public class BuyRest {

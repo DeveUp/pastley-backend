@@ -11,13 +11,22 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.pastley.util.PastleyValidate;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "provider")
+/**
+ * @project Pastley-Buy.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/SerBuitrago.
+ * @contributors leynerjoseoa.
+ * @version 1.0.0.
+ */
 @Data
 @NoArgsConstructor
+@Entity
+@Table(name = "provider")
 public class Provider implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -44,4 +53,13 @@ public class Provider implements Serializable{
 	
 	@OneToMany(mappedBy = "product")
 	private List<ProviderProduct> productos;
+	
+	public String validate() {
+		String message = null;
+		return message;
+	}
+	
+	public void uppercase() {
+		this.name = PastleyValidate.uppercase(this.name);
+	}
 }
