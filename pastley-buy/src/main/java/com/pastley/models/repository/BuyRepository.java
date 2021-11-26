@@ -14,7 +14,7 @@ public interface BuyRepository extends JpaRepository<Buy, Long> {
 	
 	public List<Buy> findByStatu(boolean statu);
 	
-	@Query(nativeQuery = false, value = "SELECT b FROM Buy b WHERE b.provider.id :idProvider")
+	@Query(nativeQuery = false, value = "SELECT b FROM Buy b WHERE b.provider.id = :idProvider")
 	public List<Buy> findByProvider(@Param("idProvider") Long idProvider);
 
 	@Query(nativeQuery = false, value = "SELECT b FROM Buy b WHERE b.dateRegister BETWEEN :start AND :end ORDER BY b.dateRegister")

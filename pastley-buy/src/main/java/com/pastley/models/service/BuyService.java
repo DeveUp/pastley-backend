@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.pastley.models.entity.Buy;
+import com.pastley.models.entity.BuyDetail;
 import com.pastley.models.repository.BuyRepository;
 import com.pastley.util.PastleyDate;
 import com.pastley.util.PastleyInterface;
@@ -76,6 +77,11 @@ public class BuyService implements PastleyInterface<Long, Buy> {
 		buy = buyRepository.save(buy);
 		if (buy == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " la compra.");
+		final Buy aux = buy;
+		entity.getDetails().stream().forEach(d -> {
+			d.setBuy(aux);
+			saveToDetail(d);
+		});
 		return buy;
 	}
 
@@ -94,6 +100,11 @@ public class BuyService implements PastleyInterface<Long, Buy> {
 		entity.setDateUpdate(null);
 		entity.setStatu(true);
 		return entity;
+	}
+	
+	private BuyDetail saveToDetail(BuyDetail detail) {
+		detail = buyDetailService.save(detail);
+		return detail;
 	}
 
 	private Buy saveToUpdate(Buy entity, int type) {
