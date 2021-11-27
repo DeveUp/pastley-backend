@@ -1,8 +1,11 @@
 package com.pastley.models.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,8 @@ import com.pastley.util.exception.PastleyException;
 
 @Service
 public class BuyService implements PastleyInterface<Long, Buy> {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(BuyService.class);
 
 	@Autowired
 	BuyRepository buyRepository;
@@ -72,16 +77,16 @@ public class BuyService implements PastleyInterface<Long, Buy> {
 		String messageType = PastleyValidate.messageToSave(type, false);
 		if (type == 1 || type == 2)
 			entity.setProvider(providerService.findById(entity.getProvider().getId()));
+		entity.calculate();
 		Buy buy = (entity.getId() != null && entity.getId() > 0) ? saveToUpdate(entity, type)
 				: saveToSave(entity, type);
 		buy = buyRepository.save(buy);
 		if (buy == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " la compra.");
-		final Buy aux = buy;
-		entity.getDetails().stream().forEach(d -> {
-			d.setBuy(aux);
-			saveToDetail(d);
-		});
+		if(type == 1) {
+			saveToDetail(buy, entity.getDetails());
+			//buy.setDetails(buyDetailService.findByBuyAll(buy.getId()));
+		}
 		return buy;
 	}
 
@@ -102,9 +107,20 @@ public class BuyService implements PastleyInterface<Long, Buy> {
 		return entity;
 	}
 	
-	private BuyDetail saveToDetail(BuyDetail detail) {
-		detail = buyDetailService.save(detail);
-		return detail;
+	private List<BuyDetail> saveToDetail(Buy buy, List<BuyDetail> list) {
+		if(!PastleyValidate.isList(list))
+			return new ArrayList<>();
+		List<BuyDetail> aux = new ArrayList<>();
+		list.stream().forEach(d -> {
+			d.setId(0L);
+			d.setBuy(buy);
+			try {
+				aux.add(buyDetailService.save(d));
+			}catch (PastleyException e) {
+				LOGGER.error("[saveToDetail(Buy buy, List<BuyDetail> list)]: "+d.getIdProduct(), e);
+			}
+		});
+		return aux;
 	}
 
 	private Buy saveToUpdate(Buy entity, int type) {

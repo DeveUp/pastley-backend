@@ -20,6 +20,9 @@ public class BuyDetailService implements PastleyInterface<Long, BuyDetail>{
 	@Autowired
 	BuyDetailRepository buyDetailRepository;
 	
+	@Autowired
+	BuyService buyService;
+	
 	@Override
 	public BuyDetail findById(Long id) {
 		if (!PastleyValidate.isLong(id))
@@ -31,29 +34,37 @@ public class BuyDetailService implements PastleyInterface<Long, BuyDetail>{
 	}
 	
 	@Override
-	public List<BuyDetail> findByStatuAll(boolean statu) {
-		return new ArrayList<>();
-	}
-	
-	@Override
 	public List<BuyDetail> findAll() {
 		return buyDetailRepository.findAll();
 	}
 	
+	@Override
+	public List<BuyDetail> findByStatuAll(boolean statu) {
+		return new ArrayList<>();
+	}
+	
+	
+	public List<BuyDetail> findByBuyAll(Long idBuy){
+		if(!PastleyValidate.isLong(idBuy))
+			throw new PastleyException(HttpStatus.NOT_FOUND, "El id de la compra no es valido.");
+		return buyDetailRepository.findByBuy(idBuy);
+	}
 
 	@Override
 	public BuyDetail save(BuyDetail entity) {
 		if(entity == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido la compra.");
-		String message = entity.validate();
+		String message = entity.validate(true);
 		if (message != null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, message);
-		String messageType = PastleyValidate.messageToSave(entity.getId() <= 0 ? 1 : 2, false);
-		BuyDetail buyDetail = (entity.getId() != null && entity.getId() > 0) ? saveToUpdate(entity)
+		String messageType = PastleyValidate.messageToSave(!PastleyValidate.isLong(entity.getId()) ? 1 : 2, false);
+		entity.setBuy(buyService.findById(entity.getBuy().getId()));
+		BuyDetail buyDetail = (PastleyValidate.isLong(entity.getId())) ? saveToUpdate(entity)
 				: saveToSave(entity);
 		buyDetail = buyDetailRepository.save(buyDetail);
 		if (buyDetail == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " la compra.");
+		buyDetail.calculate();
 		return buyDetail;
 	}
 	
@@ -63,6 +74,9 @@ public class BuyDetailService implements PastleyInterface<Long, BuyDetail>{
 	}
 	
 	private BuyDetail saveToSave(BuyDetail entity) {
+		entity.setId(0L);
+		entity.calculate();
+		entity.addDescription();
 		return entity;
 	}
 	

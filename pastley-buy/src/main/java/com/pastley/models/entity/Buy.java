@@ -40,7 +40,7 @@ public class Buy implements Serializable {
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "id_proveedor")
+	@JoinColumn(name = "id_proveedor", nullable = false)
 	private Provider provider;
 
 	@Column(name = "total_net", nullable = false)
@@ -69,19 +69,27 @@ public class Buy implements Serializable {
 	}
 
 	public void calculate() {
-		totalNet = calculateTotal(true);
-		totalGross = calculateTotal(false);
+		totalNet = BigInteger.ZERO;
+		totalGross = BigInteger.ZERO;
+		calculateTotal();
 	}
 
-	public BigInteger calculateTotal(boolean type) {
+	public BigInteger calculateTotal() {
 		if (!PastleyValidate.isList(details))
 			return BigInteger.ZERO;
 		BigInteger value = BigInteger.ZERO;
 		for (BuyDetail bt : details) {
-			if ((type && PastleyValidate.bigIntegerHigherZero(bt.getSubtotalNet()))
-					|| (!type && PastleyValidate.bigIntegerHigherZero(bt.getSubtotalGross()))) {
-				value = value.add(type ? bt.getSubtotalNet() : bt.getSubtotalGross());
+			String message = bt.validate(false);
+			if(message == null) {
+				bt.calculate();
+				if (PastleyValidate.bigIntegerHigherZero(bt.getSubtotalNet()))
+					totalNet = totalNet.add(bt.getSubtotalNet());
+				if(PastleyValidate.bigIntegerHigherZero(bt.getSubtotalGross()))
+					totalGross = totalGross.add(bt.getSubtotalGross());
+			}else {
+				System.out.println(message);
 			}
+			
 		}
 		return value;
 	}

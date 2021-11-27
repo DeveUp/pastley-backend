@@ -38,6 +38,7 @@ public class BuyDetail implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
+	
 	private Long idProduct;
 
 	@Column(name = "discount", nullable = false, columnDefinition = "varchar(3) default 0")
@@ -76,16 +77,23 @@ public class BuyDetail implements Serializable {
 	@Transient
 	private BigInteger otherSubtotalPriceDisount;
 
-	public String validate() {
+	public String validate(boolean isBuy) {
 		String message = null;
 		if (!PastleyValidate.isChain(discount))
 			message = "El descuento no es valido.";
+		if (PastleyValidate.isChain(discount) && discount.length() > 3)
+			message = "El descuento es un porcentaje de 0 a 100.";
 		if (!PastleyValidate.isChain(vat))
 			message = "El iva no es valido.";
+		if (PastleyValidate.isChain(vat) && vat.length() > 3)
+			message = "El iva es un porcentaje de 0 a 100.";
+		if (!PastleyValidate.isLong(idProduct))
+			message = "El id del producto no es valido.";
 		if (count <= 0)
 			message = "La cantidad no es valida.";
-		if (buy == null || !PastleyValidate.isLong(buy.getId()))
-			message = "El id de la compra no es valido.";
+		if (isBuy)
+			if (buy == null || !PastleyValidate.isLong(buy.getId()))
+				message = "El id de la compra no es valido.";
 		return message;
 	}
 
@@ -102,6 +110,6 @@ public class BuyDetail implements Serializable {
 	}
 	
 	public void addDescription() {
-		this.description = "Se han comprado "+count+" insumos.";
+		this.description = "Se han comprado "+count+" insumos del producto id "+idProduct+".";
 	}
 }
