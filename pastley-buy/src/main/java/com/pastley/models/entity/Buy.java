@@ -30,51 +30,59 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "buy")
-public class Buy implements Serializable{
-	
+public class Buy implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "id_proveedor")
 	private Provider provider;
-	
-	@Column(name="iva", nullable = false, length = 3)
-	private String iva;
-	
-	@Column(name="total_net", nullable = false)
+
+	@Column(name = "total_net", nullable = false)
 	private BigInteger totalNet;
-	
-	@Column(name="total_gross", nullable = false)
+
+	@Column(name = "total_gross", nullable = false)
 	private BigInteger totalGross;
-	
-	@Column(name="statu", nullable = false, columnDefinition="tinyint(1) default 1")
+
+	@Column(name = "statu", nullable = false, columnDefinition = "tinyint(1) default 1")
 	private boolean statu;
-	
-	@Column(name="date_register", nullable = false)
+
+	@Column(name = "date_register", nullable = false)
 	private String dateRegister;
-	
-	@Column(name="date_update", nullable = true)
+
+	@Column(name = "date_update", nullable = true)
 	private String dateUpdate;
-	
+
 	@Transient
 	private List<BuyDetail> details;
-	
-	
+
 	public String validate() {
-		String message= null;
-		if (!PastleyValidate.isChain(iva))
-			message = "El IVA del producto no es valido.";
-		if(provider == null || !PastleyValidate.isLong(provider.getId()))
+		String message = null;
+		if (provider == null || !PastleyValidate.isLong(provider.getId()))
 			message = "El id del proveedor no es valido.";
-		if (!PastleyValidate.bigIntegerHigherZero(totalNet))
-			message = "El total neto no es valido.";
-		if (!PastleyValidate.bigIntegerHigherZero(totalGross))
-			message = "El total bruto no es valido.";
 		return message;
+	}
+
+	public void calculate() {
+		totalNet = calculateTotal(true);
+		totalGross = calculateTotal(false);
+	}
+
+	public BigInteger calculateTotal(boolean type) {
+		if (!PastleyValidate.isList(details))
+			return BigInteger.ZERO;
+		BigInteger value = BigInteger.ZERO;
+		for (BuyDetail bt : details) {
+			if ((type && PastleyValidate.bigIntegerHigherZero(bt.getSubtotalNet()))
+					|| (!type && PastleyValidate.bigIntegerHigherZero(bt.getSubtotalGross()))) {
+				value = value.add(type ? bt.getSubtotalNet() : bt.getSubtotalGross());
+			}
+		}
+		return value;
 	}
 }
