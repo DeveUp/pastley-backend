@@ -1,10 +1,10 @@
-package com.pastley.model.repository;
+package com.pastley.application.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.pastley.model.entity.Product;
+import com.pastley.domain.Product;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

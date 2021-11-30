@@ -1,7 +1,9 @@
-package com.pastley.util;
+package com.pastley.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.pastley.util.PastleyVariable;
 
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;

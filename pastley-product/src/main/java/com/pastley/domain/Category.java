@@ -1,4 +1,4 @@
-package com.pastley.model.entity;
+package com.pastley.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

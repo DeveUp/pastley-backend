@@ -1,10 +1,10 @@
-package com.pastley.model.service;
+package com.pastley.application.service;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.pastley.model.entity.Product;
-import com.pastley.model.repository.ProductRepository;
+import com.pastley.application.repository.ProductRepository;
+import com.pastley.domain.Product;
 import com.pastley.util.PastleyDate;
 import com.pastley.util.PastleyInterface;
 import com.pastley.util.PastleyValidate;

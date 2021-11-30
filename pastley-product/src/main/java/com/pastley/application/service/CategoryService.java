@@ -1,4 +1,4 @@
-package com.pastley.model.service;
+package com.pastley.application.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.pastley.model.entity.Category;
-import com.pastley.model.entity.Product;
-import com.pastley.model.repository.CategoryRepository;
+import com.pastley.application.repository.CategoryRepository;
+import com.pastley.domain.Category;
+import com.pastley.domain.Product;
 import com.pastley.util.PastleyDate;
 import com.pastley.util.PastleyInterface;
 import com.pastley.util.PastleyValidate;

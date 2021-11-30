@@ -1,7 +1,7 @@
-package com.pastley.rest;
+package com.pastley.infrastructure.controller;
 
-import com.pastley.model.entity.Category;
-import com.pastley.model.service.CategoryService;
+import com.pastley.application.service.CategoryService;
+import com.pastley.domain.Category;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

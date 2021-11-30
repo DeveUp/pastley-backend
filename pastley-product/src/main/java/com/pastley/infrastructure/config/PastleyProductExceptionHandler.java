@@ -1,4 +1,4 @@
-package com.pastley.util;
+package com.pastley.infrastructure.config;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 

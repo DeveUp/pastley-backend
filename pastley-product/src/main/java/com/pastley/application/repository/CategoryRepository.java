@@ -1,4 +1,4 @@
-package com.pastley.model.repository;
+package com.pastley.application.repository;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.pastley.model.entity.Category;
+import com.pastley.domain.Category;
 
 /**
  * @project Pastley-Product.

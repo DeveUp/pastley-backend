@@ -1,4 +1,4 @@
-package com.pastley.model.entity;
+package com.pastley.domain;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -53,6 +53,9 @@ public class Product implements Serializable {
 	
 	@Column(name = "statu", nullable = true, columnDefinition = "tinyint(1) default 1")
 	private boolean statu;
+	
+	@Column(name = "supplies", nullable = true, columnDefinition = "tinyint(1) default 1")
+	private boolean supplies;
 	
 	@Column(name = "description", nullable = true, length = 500)
 	private String description;
