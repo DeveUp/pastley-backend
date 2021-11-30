@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import com.pastley.util.PastleyValidate;
+import com.pastley.infrastructure.config.PastleyValidate;
 
 import java.io.Serializable;
 

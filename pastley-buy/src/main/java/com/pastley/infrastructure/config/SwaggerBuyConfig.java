@@ -9,7 +9,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * @project Pastley-Sale.
+ * @project Pastley-Buy.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
  * @contributors leynerjoseoa.
@@ -17,11 +17,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @EnableSwagger2
-public class SwaggerProductConfig {
+public class SwaggerBuyConfig {
 	
-	///////////////////////////////////////////////////////
-	// Method
-	///////////////////////////////////////////////////////
 	@Bean
 	public Docket document() {
 		return new Docket(DocumentationType.SWAGGER_2)

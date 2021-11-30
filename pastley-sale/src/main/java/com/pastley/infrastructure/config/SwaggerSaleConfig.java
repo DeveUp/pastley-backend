@@ -17,11 +17,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @EnableSwagger2
-public class SwaggerProductConfig {
+public class SwaggerSaleConfig {
 	
-	///////////////////////////////////////////////////////
-	// Method
-	///////////////////////////////////////////////////////
 	@Bean
 	public Docket document() {
 		return new Docket(DocumentationType.SWAGGER_2)

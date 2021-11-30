@@ -5,7 +5,7 @@ import java.math.BigInteger;
 
 import javax.persistence.*;
 
-import com.pastley.util.PastleyValidate;
+import com.pastley.infrastructure.config.PastleyValidate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
