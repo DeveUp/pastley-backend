@@ -1,14 +1,10 @@
-#SPRING
 spring:
-  #APP
   application:
     name: pastley-sale
-  #CONFIG
   cloud:
     config:
       enabled: true
       uri: http://localhost:8084
-  #JPA
   jpa:
     hibernate:
       ddl-auto: update #create
@@ -20,7 +16,6 @@ spring:
     url: jdbc:mysql://localhost:3306/lsy_sale?serverTimezone=America/Bogota&useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
     username: root
     password: 
-#ACTUATOR EUREKA
 management:
   endpoints:
     web:
