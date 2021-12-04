@@ -10,8 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
-import com.pastley.domain.User;
-import com.pastley.infrastructure.feign.UserFeign;
+import com.pastley.application.services.UserService;
+import com.pastley.domain.UserModel;
 
 import feign.FeignException;
 
@@ -21,12 +21,11 @@ public class AuthenticationSuccessErrorHandler implements AuthenticationEventPub
 	private Logger log = LoggerFactory.getLogger(AuthenticationSuccessErrorHandler.class);
 
 	@Autowired
-	private UserFeign usuarioService;
+	private UserService userService;
 	
 	@Override
 	public void publishAuthenticationSuccess(Authentication authentication) {
-		
-		// if(authentication.getName().equalsIgnoreCase("frontendapp")) {
+	
 		if(authentication.getDetails() instanceof WebAuthenticationDetails) {
 			return;
 		}
@@ -35,22 +34,18 @@ public class AuthenticationSuccessErrorHandler implements AuthenticationEventPub
 		String mensaje = "Success Login: " + user.getUsername();
 		System.out.println(mensaje);
 		log.info(mensaje);
-
-		User aux = usuarioService.findByNickname(authentication.getName());
-		
-		if(aux.getAttempts() > 0) {
-			aux.setAttempts(0);
-		}
 	}
 
 	@Override
 	public void publishAuthenticationFailure(AuthenticationException exception, Authentication authentication) {
 		String mensaje = "Error en el Login: " + exception.getMessage();
 		log.error(mensaje);
+		System.out.println(mensaje);
 		try {
 			StringBuilder errors = new StringBuilder();
 			errors.append(mensaje);
-			User aux = usuarioService.findByNickname(authentication.getName());
+			UserModel userModel = userService.findByNickname(authentication.getName());
+			System.out.println(userModel);
 		} catch (FeignException e) {
 			log.error(String.format("El usuario %s no existe en el sistema", authentication.getName()));
 		}

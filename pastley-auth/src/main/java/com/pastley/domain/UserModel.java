@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class Person {
-	private String email;
+public class UserModel {
+	private String nickname;
+	private String password;
+	private PersonModel person;
 }

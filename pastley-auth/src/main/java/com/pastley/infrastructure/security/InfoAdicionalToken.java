@@ -10,22 +10,24 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.stereotype.Component;
 
-import com.pastley.domain.User;
-import com.pastley.infrastructure.feign.UserFeign;
+import com.pastley.application.services.UserService;
+import com.pastley.domain.UserModel;
 
 @Component
 public class InfoAdicionalToken implements TokenEnhancer{
 
 	@Autowired
-	private UserFeign userFeign;
+	private UserService userService;
 	
 	@Override
 	public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
 		Map<String, Object> info = new HashMap<String, Object>();
-		User usuario = userFeign.findByNickname(authentication.getName());
-		info.put("nickname", usuario.getNickname());
-		info.put("email", usuario.getPerson().getEmail());
+		
+		UserModel userModel = userService.findByNickname(authentication.getName());
+		info.put("nickname", userModel.getNickname());
+		info.put("email", userModel.getPerson().getEmail());
 		((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
+		
 		return accessToken;
 	}
 
