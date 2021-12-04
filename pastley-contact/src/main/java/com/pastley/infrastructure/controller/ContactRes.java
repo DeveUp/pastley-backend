@@ -42,12 +42,12 @@ public class ContactRes implements Serializable{
 		return ResponseEntity.status(HttpStatus.OK).body(contactService.findAll());
 	}
 	
-	@GetMapping(value = {"", "/all/find/user/{idUser}"})
+	@GetMapping(value = {"/all/find/user/{idUser}"})
 	public ResponseEntity<?> findByIdUserAll(@PathVariable("idUser") Long idUser) {
 		return ResponseEntity.status(HttpStatus.OK).body(contactService.findByUserAll(idUser));
 	}
 	
-	@GetMapping(value = {"", "/all/find/pqr/{idPqr}"})
+	@GetMapping(value = {"/all/find/pqr/{idPqr}"})
 	public ResponseEntity<?> findByIdPqrAll(@PathVariable("idPqr") Long idPqr) {
 		return ResponseEntity.status(HttpStatus.OK).body(contactService.findByTypePqrAll(idPqr));
 	}
