@@ -18,7 +18,7 @@ public class PastleyVariable {
 	public static final String PASTLEY_VALIDATE_PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
 	/* Swagger */
-	public static final String PASTLEY_PATH_REST = "com.pastley.rest";
+	public static final String PASTLEY_PATH_REST = "com.pastley.infrastructure.controller";
 	
 	/* Users */
 	public static final Long PASTLEY_USER_ADMINISTRATOR_ID = 1L;
