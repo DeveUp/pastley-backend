@@ -10,3 +10,11 @@ spring:
           search-paths: pastley-config-data
   application:
     name: pastley-config-service
+config:
+  security:
+    oauth:
+      client:
+        id: frontendapp
+        secret: 12345
+      jwt:
+        key: algun_codigo_secreto_aeiou
