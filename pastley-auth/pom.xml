@@ -8,9 +8,12 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.5.5</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<relativePath />
 	</parent>
 
+	<!-- -->
+	<!-- APP -->
+	<!-- -->
 	<groupId>com.pastley</groupId>
 	<artifactId>pastley-auth</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -79,7 +82,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-
+		
 		<!-- -->
 		<!-- RESILIENCE4J -->
 		<!-- -->
@@ -87,7 +90,7 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
 		</dependency>
-
+		
 		<!-- -->
 		<!-- AOP -->
 		<!-- -->
@@ -113,6 +116,15 @@
 		</dependency>
 
 		<!-- -->
+		<!-- LOMBOK -->
+		<!-- -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- -->
 		<!-- SECURITY -->
 		<!-- -->
 		<dependency>
@@ -132,15 +144,6 @@
 		<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
-		</dependency>
-
-		<!-- -->
-		<!-- LOMBOK -->
-		<!-- -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- -->

@@ -42,5 +42,4 @@ public class UserService implements UserDetailsService {
 	public UserModel findByNickname(String nickname) {
 		return userFeignClient.findByNickname(nickname);
 	}
-
 }

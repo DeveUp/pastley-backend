@@ -1,10 +1,24 @@
 package com.pastley.domain;
 
+import java.io.Serializable;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class PersonModel {
+@AllArgsConstructor
+public class PersonModel implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+	private Long id;
+	private Long document;
+	private String name;
+	private String subname;
+	private String phone;
 	private String email;
+	private String address;
+	private String dateBirthday;
 }
