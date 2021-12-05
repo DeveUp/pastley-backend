@@ -27,6 +27,7 @@ public class SpringSecurityConfig {
 				.pathMatchers("/security/login/**").permitAll()
 				.pathMatchers(HttpMethod.GET, 
 						"/product",
+						"/product/{id}",
 						"/category",
 						"/company/{id}"
 				).permitAll()
