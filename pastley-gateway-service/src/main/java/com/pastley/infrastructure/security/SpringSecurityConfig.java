@@ -19,23 +19,23 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 public class SpringSecurityConfig {
 	
 	@Autowired
-	private JwtAuthenticationFilter authenticationFilter;
+	JwtAuthenticationFilter authenticationFilter;
 
 	@Bean
 	public SecurityWebFilterChain configure(ServerHttpSecurity http) {
 		return http.authorizeExchange()
-				.pathMatchers("/api/security/oauth/**").permitAll()
-				.pathMatchers(HttpMethod.GET, "/api/productos/listar",
-						"/api/items/listar",
-						"/api/usuarios/usuarios",
-						"/api/items/ver/{id}/cantidad/{cantidad}",
-						"/api/productos/ver/{id}").permitAll()
-				.pathMatchers(HttpMethod.GET, "/api/usuarios/usuarios/{id}").hasAnyRole("ADMIN", "USER")
-				.pathMatchers("/api/productos/**", "/api/items/**", "/api/usuarios/usuarios/**").hasRole("ADMIN")
+				.pathMatchers("/security/login/**").permitAll()
+				.pathMatchers(HttpMethod.GET, 
+						"/product",
+						"/category",
+						"/company/{id}"
+				).permitAll()
 				.anyExchange().authenticated()
-				.and().addFilterAt(authenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+				.and().addFilterAt(
+						authenticationFilter, 
+						SecurityWebFiltersOrder.AUTHENTICATION
+				)
 				.csrf().disable()
 				.build();
 	}
-	
 }

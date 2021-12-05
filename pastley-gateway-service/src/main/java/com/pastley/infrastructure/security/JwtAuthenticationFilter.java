@@ -20,19 +20,20 @@ import reactor.core.publisher.Mono;
  * @version 1.0.0.
  */
 @Component
-public class JwtAuthenticationFilter implements WebFilter{
+public class JwtAuthenticationFilter implements WebFilter {
 
 	@Autowired
 	private ReactiveAuthenticationManager authenticationManager;
-	
+
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 		return Mono.justOrEmpty(exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION))
 				.filter(authHeader -> authHeader.startsWith("Bearer "))
-				.switchIfEmpty(chain.filter(exchange).then(Mono.empty()))
-				.map(token -> token.replace("Bearer ", ""))
-				.flatMap(token -> authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(null, token)))
-				.flatMap(authentication -> chain.filter(exchange).contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication)));
+				.switchIfEmpty(chain.filter(exchange).then(Mono.empty())).map(token -> token.replace("Bearer ", ""))
+				.flatMap(token -> authenticationManager
+						.authenticate(new UsernamePasswordAuthenticationToken(null, token)))
+				.flatMap(authentication -> chain.filter(exchange)
+						.contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication)));
 	}
 
 }
