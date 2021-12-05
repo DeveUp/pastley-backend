@@ -30,22 +30,20 @@ import reactor.core.publisher.Mono;
 public class AuthenticationManagerJwt implements ReactiveAuthenticationManager {
 
 	@Value("${config.security.oauth.jwt.key}")
-	private String llaveJwt;
+	private String key;
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public Mono<Authentication> authenticate(Authentication authentication) {
 		return Mono.just(authentication.getCredentials().toString()).map(token -> {
-			SecretKey llave = Keys.hmacShaKeyFor(Base64.getEncoder().encode(llaveJwt.getBytes()));
-			return Jwts.parserBuilder().setSigningKey(llave).build().parseClaimsJws(token).getBody();
+			SecretKey secretKey = Keys.hmacShaKeyFor(Base64.getEncoder().encode(this.key.getBytes()));
+			return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
 		}).map(claims -> {
-			String username = claims.get("user_name", String.class);
-
+			String nickname = claims.get("nickname", String.class);
 			List<String> roles = claims.get("authorities", List.class);
 			Collection<GrantedAuthority> authorities = roles.stream().map(SimpleGrantedAuthority::new)
 					.collect(Collectors.toList());
-			return new UsernamePasswordAuthenticationToken(username, null, authorities);
-
+			return new UsernamePasswordAuthenticationToken(nickname, null, authorities);
 		});
 	}
 }
