@@ -3,6 +3,8 @@ package com.pastley.infrastructure.controller;
 import com.pastley.application.service.CategoryService;
 import com.pastley.domain.Category;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +17,12 @@ import org.springframework.web.bind.annotation.*;
  * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/category")
 public class CategoryRest {
 	
-    @Autowired
+	@Autowired
     CategoryService categoryService;
     
 	@GetMapping(value = { "/find/id/{id}", "/{id}" })

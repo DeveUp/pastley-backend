@@ -1,4 +1,4 @@
-package com.pastley.infrastructure.exception;
+package com.pastley.application.exception;
 
 import java.util.HashMap;
 import java.util.Map;

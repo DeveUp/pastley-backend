@@ -1,4 +1,4 @@
-package com.pastley.infrastructure.exception;
+package com.pastley.application.exception;
 
 import org.springframework.http.HttpStatus;
 
@@ -17,8 +17,14 @@ public class PastleyException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	private HttpStatus httpStatus;
 
+	
+	public PastleyException(String message) {
+		this(HttpStatus.NOT_FOUND, message);
+	}
+	
 	public PastleyException(HttpStatus httpStatus, String message) {
 		super(message);
 		this.httpStatus = httpStatus;
 	}
+	
 }

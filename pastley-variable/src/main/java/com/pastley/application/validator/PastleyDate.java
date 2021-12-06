@@ -1,4 +1,4 @@
-package com.pastley.infrastructure.config;
+package com.pastley.application.validator;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -11,6 +11,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+
+import com.pastley.infrastructure.config.PastleyVariable;
 
 import lombok.Data;
 

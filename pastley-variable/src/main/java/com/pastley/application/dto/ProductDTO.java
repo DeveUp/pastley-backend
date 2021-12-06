@@ -1,10 +1,10 @@
-package com.pastley.infrastructure.dto;
+package com.pastley.application.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import com.pastley.infrastructure.config.PastleyValidate;
+import com.pastley.application.validator.PastleyValidate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

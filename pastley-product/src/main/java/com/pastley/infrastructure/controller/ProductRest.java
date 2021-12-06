@@ -49,6 +49,11 @@ public class ProductRest {
 		return ResponseEntity.status(HttpStatus.OK).body(productService.findProductByPromotionAll());
 	}
 	
+	@GetMapping(value = {"/all/find/supplies/{supplies}" })
+	public ResponseEntity<?> findBySuppliesAll(@PathVariable("supplies") boolean supplies) {
+		return ResponseEntity.status(HttpStatus.OK).body(productService.findBySuppliesAll(supplies));
+	}
+	
 	@GetMapping(value = {"/all/find/statu/{statu}" })
 	public ResponseEntity<?> findByStatuAll(@PathVariable("statu") boolean statu) {
 		return ResponseEntity.status(HttpStatus.OK).body(productService.findByStatuAll(statu));

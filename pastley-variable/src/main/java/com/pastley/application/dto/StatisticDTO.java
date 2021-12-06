@@ -1,4 +1,4 @@
-package com.pastley.infrastructure.dto;
+package com.pastley.application.dto;
 import java.io.Serializable;
 
 import lombok.Data;

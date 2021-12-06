@@ -1,13 +1,16 @@
 package com.pastley.domain;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-
-import com.pastley.infrastructure.config.PastleyValidate;
-
-import java.io.Serializable;
 
 /**
  * @project Pastley-Product.
@@ -16,13 +19,13 @@ import java.io.Serializable;
  * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
-@Entity
-@Table(name = "category")
 @Data
 @NoArgsConstructor
+@Entity
+@Table(name = "category")
 public class Category implements Serializable{
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,18 +43,4 @@ public class Category implements Serializable{
 	
 	@Column(name="date_update", nullable = true)
 	private String dateUpdate;
-	
-	public String validate() {
-		String chain = null;
-		if (!PastleyValidate.isChain(name))
-			chain = "El nombre del la categoria no es valido.";
-		return chain;
-	}
-	
-	/**
-	 * Convert variables to uppercase.
-	 */
-	public void uppercase() {
-		this.name = PastleyValidate.uppercase(this.name);
-	}
 }

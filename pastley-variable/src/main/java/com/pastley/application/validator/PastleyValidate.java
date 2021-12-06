@@ -1,4 +1,4 @@
-package com.pastley.infrastructure.config;
+package com.pastley.application.validator;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -9,7 +9,8 @@ import java.util.regex.Pattern;
 
 import org.springframework.http.HttpStatus;
 
-import com.pastley.infrastructure.exception.PastleyException;
+import com.pastley.application.exception.PastleyException;
+import com.pastley.infrastructure.config.PastleyVariable;
 
 /**
  * @project Pastley-Variable.
