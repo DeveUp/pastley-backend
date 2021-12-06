@@ -1,9 +1,9 @@
-package com.pastley.application.repository;
+package com.pastley.models.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.pastley.domain.Company;
+import com.pastley.models.entity.Company;
 
 /**
  * @project Pastley-Contact.

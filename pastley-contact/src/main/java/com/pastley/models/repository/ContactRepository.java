@@ -1,4 +1,4 @@
-package com.pastley.application.repository;
+package com.pastley.models.repository;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.pastley.domain.Contact;
+import com.pastley.models.entity.Contact;
 
 /**
  * @project Pastley-Contact.
@@ -19,14 +19,13 @@ import com.pastley.domain.Contact;
 @Repository
 public interface ContactRepository extends JpaRepository<Contact, Long> {
 	
-	public List<Contact> findByStatu(boolean statu);
+	List<Contact> findByStatu(boolean statu);
 	
-	public List<Contact> findByIdUser(Long idUser);
+	List<Contact> findByIdUser(Long idUser);
 	
 	@Query(nativeQuery = false, value = "SELECT c FROM Contact c WHERE c.typePqr.id = :idTypePqr")
-	public List<Contact> findByIdTypePqr(Long idTypePqr);
+	List<Contact> findByIdTypePqr(Long idTypePqr);
 	
 	@Query(nativeQuery = false, value = "SELECT c FROM Contact c WHERE c.dateRegister BETWEEN :start AND :end ORDER BY c.dateRegister")
-	public List<Contact> findByRangeDateRegister(@Param("start") String start, @Param("end") String end);
-
+	List<Contact> findByRangeDateRegister(@Param("start") String start, @Param("end") String end);
 }

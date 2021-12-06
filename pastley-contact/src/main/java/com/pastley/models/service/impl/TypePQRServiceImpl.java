@@ -1,6 +1,4 @@
-package com.pastley.application.service;
-
-import org.springframework.http.HttpStatus;
+package com.pastley.models.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +10,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.pastley.application.repository.TypePQRRepository;
-import com.pastley.domain.TypePQR;
-import com.pastley.infrastructure.config.PastleyDate;
-import com.pastley.infrastructure.config.PastleyInterface;
-import com.pastley.infrastructure.config.PastleyValidate;
-import com.pastley.infrastructure.exception.PastleyException;
-import com.pastley.infrastructure.dto.StatisticDTO;
+import com.pastley.models.dto.StatisticDTO;
+import com.pastley.models.entity.TypePQR;
+import com.pastley.models.entity.validator.TypePQRValidator;
+import com.pastley.models.repository.TypePQRRepository;
+import com.pastley.models.service.TypePQRService;
+import com.pastley.util.PastleyDate;
+import com.pastley.util.PastleyValidate;
+import com.pastley.util.exception.PastleyException;
 
 /**
  * @project Pastley-Contact.
@@ -28,8 +27,8 @@ import com.pastley.infrastructure.dto.StatisticDTO;
  * @version 1.0.0.
  */
 @Service
-public class TypePQRService implements PastleyInterface<Long, TypePQR> {
-
+public class TypePQRServiceImpl implements TypePQRService{
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(TypePQRService.class);
 
 	@Autowired
@@ -37,22 +36,20 @@ public class TypePQRService implements PastleyInterface<Long, TypePQR> {
 
 	@Override
 	public TypePQR findById(Long id) {
-		if (id <= 0)
-			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del tipo de pqr no es valido.");
+		if (!PastleyValidate.isLong(id))
+			throw new PastleyException("El id del tipo de pqr no es valido.");
 		Optional<TypePQR> type = typePQRRepository.findById(id);
 		if (!type.isPresent())
-			throw new PastleyException(HttpStatus.NOT_FOUND,
-					"No se ha encontrado ningun tipo de pqr con el id " + id + ".");
+			throw new PastleyException("No se ha encontrado ningun tipo de pqr con el id " + id + ".");
 		return type.orElse(null);
 	}
 
 	public TypePQR findByName(String name) {
 		if (!PastleyValidate.isChain(name))
-			throw new PastleyException(HttpStatus.NOT_FOUND, "El nombre del tipo de pqr no es valido.");
+			throw new PastleyException("El nombre del tipo de pqr no es valido.");
 		TypePQR type = typePQRRepository.findByName(name);
 		if (type == null)
-			throw new PastleyException(HttpStatus.NOT_FOUND,
-					"No se ha encontrado ningun tipo de pqr con el nombre " + name + ".");
+			throw new PastleyException("No se ha encontrado ningun tipo de pqr con el nombre " + name + ".");
 		return type;
 	}
 
@@ -71,9 +68,9 @@ public class TypePQRService implements PastleyInterface<Long, TypePQR> {
 		return typePQRRepository.findByRangeDateRegister(arrayDate[0], arrayDate[1]);
 	}
 
-	private Long findByStatisticTypePrivate(Long id) {
-		if (id <= 0)
-			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del tipo de pqr no es valido.");
+	public Long findByStatisticTypePrivate(Long id) {
+		if (!PastleyValidate.isLong(id))
+			throw new PastleyException("El id del tipo de pqr no es valido.");
 		Long count = typePQRRepository.countByTypePQR(id);
 		return count == null ? 0L : count;
 	}
@@ -93,24 +90,14 @@ public class TypePQRService implements PastleyInterface<Long, TypePQR> {
 		}
 	}
 
-	@Override
-	public TypePQR save(TypePQR entity) {
-		return null;
-	}
-
 	public TypePQR save(TypePQR entity, int type) {
-		if (entity == null)
-			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido el tipo de pqr.");
-		String message = entity.validate();
+		TypePQRValidator.validator(entity);
 		String messageType = PastleyValidate.messageToSave(type, false);
-		if (message != null)
-			throw new PastleyException(HttpStatus.NOT_FOUND,
-					"No se ha " + messageType + " el tipo pqr, " + message + ".");
-		TypePQR typePqr = (entity.getId() != null && entity.getId() > 0) ? saveToUpdate(entity, type)
+		TypePQR typePqr = (PastleyValidate.isLong(entity.getId())) ? saveToUpdate(entity, type)
 				: saveToSave(entity, type);
 		typePqr = typePQRRepository.save(typePqr);
 		if (typePqr == null)
-			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha " + messageType + " el tipo pqr.");
+			throw new PastleyException("No se ha " + messageType + " el tipo pqr.");
 		return typePqr;
 	}
 
@@ -118,27 +105,24 @@ public class TypePQRService implements PastleyInterface<Long, TypePQR> {
 	public boolean delete(Long id) {
 		findById(id);
 		Long count = findByStatisticTypePrivate(id);
-		if (count != null && count > 0L)
-			throw new PastleyException(HttpStatus.NOT_FOUND,
-					"No se ha eliminado el tipo de pqr con el id " + id + ", tiene asociado " + count + " contactos.");
+		if (PastleyValidate.isLong(count))
+			throw new PastleyException("No se ha eliminado el tipo de pqr con el id " + id + ", tiene asociado " + count + " contactos.");
 		typePQRRepository.deleteById(id);
 		try {
-			if (findById(id) == null) {
+			if (findById(id) == null)
 				return true;
-			}
 		} catch (PastleyException e) {
 			LOGGER.error("[delete(Long id)]", e);
 			return true;
 		}
-		throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha eliminado el tipo de pqr con el id " + id + ".");
+		throw new PastleyException("No se ha eliminado el tipo de pqr con el id " + id + ".");
 	}
 
 	private TypePQR saveToSave(TypePQR entity, int type) {
 		if (!validateName(entity.getName()))
-			throw new PastleyException(HttpStatus.NOT_FOUND,
-					"Ya existe un tipo de pqr con el nombre " + entity.getName() + ".");
+			throw new PastleyException("Ya existe un tipo de pqr con el nombre " + entity.getName() + ".");
 		PastleyDate date = new PastleyDate();
-		entity.uppercase();
+		uppercase(entity);
 		entity.setId(0L);
 		entity.setDateRegister(date.currentToDateTime(null));
 		entity.setDateUpdate(null);
@@ -151,10 +135,9 @@ public class TypePQRService implements PastleyInterface<Long, TypePQR> {
 		if (type != 3)
 			typePqr = findById(entity.getId());
 		if (!testName(entity.getName(), (type == 3) ? entity.getName() : typePqr.getName()))
-			throw new PastleyException(HttpStatus.NOT_FOUND,
-					"Ya existe un tipo de pqr con el nombre " + entity.getName() + ".");
+			throw new PastleyException("Ya existe un tipo de pqr con el nombre " + entity.getName() + ".");
 		PastleyDate date = new PastleyDate();
-		entity.uppercase();
+		uppercase(entity);
 		entity.setDateRegister((type == 3) ? entity.getDateRegister() : typePqr.getDateRegister());
 		entity.setDateUpdate(date.currentToDateTime(null));
 		entity.setStatu((type == 3) ? !entity.isStatu() : entity.isStatu());
@@ -174,5 +157,9 @@ public class TypePQRService implements PastleyInterface<Long, TypePQR> {
 
 	private boolean testName(String nameA, String nameB) {
 		return (!nameA.equalsIgnoreCase(nameB)) ? validateName(nameA) : true;
+	}
+	
+	private void uppercase(TypePQR typePQR) {
+		
 	}
 }

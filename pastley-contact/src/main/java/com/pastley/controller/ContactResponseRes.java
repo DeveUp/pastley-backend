@@ -1,6 +1,4 @@
-package com.pastley.infrastructure.controller;
-
-import java.io.Serializable;
+package com.pastley.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pastley.application.service.ContactResponseService;
-import com.pastley.domain.ContactResponse;
+import com.pastley.models.entity.ContactResponse;
+import com.pastley.models.service.ContactResponseService;
 
 /**
  * @project Pastley-Contact.
@@ -25,10 +23,8 @@ import com.pastley.domain.ContactResponse;
  * @version 1.0.0.
  */
 @RestController
-@RequestMapping("contactResponse")
-public class ContactResponseRes implements Serializable{
-
-	private static final long serialVersionUID = 1L;
+@RequestMapping("contact-response")
+public class ContactResponseRes{
 	
 	@Autowired
 	ContactResponseService contactResponseService;

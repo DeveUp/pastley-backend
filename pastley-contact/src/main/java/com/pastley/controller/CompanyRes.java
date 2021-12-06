@@ -1,6 +1,5 @@
-package com.pastley.infrastructure.controller;
+package com.pastley.controller;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pastley.application.service.CompanyService;
-import com.pastley.domain.Company;
+import com.pastley.models.entity.Company;
+import com.pastley.models.service.CompanyService;
 
 /**
  * @project Pastley-Contact.
@@ -25,9 +24,7 @@ import com.pastley.domain.Company;
  */
 @RestController
 @RequestMapping("company")
-public class CompanyRes implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class CompanyRes{
 
 	@Autowired
 	CompanyService companyService;

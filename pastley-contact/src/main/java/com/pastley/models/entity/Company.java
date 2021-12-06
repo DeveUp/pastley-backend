@@ -1,4 +1,4 @@
-package com.pastley.domain;
+package com.pastley.models.entity;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -10,8 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.pastley.infrastructure.config.PastleyValidate;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,10 +20,10 @@ import lombok.NoArgsConstructor;
  * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
-@Entity
-@Table(name = "company")
 @Data
 @NoArgsConstructor
+@Entity
+@Table(name = "company")
 public class Company implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -60,7 +58,7 @@ public class Company implements Serializable {
 	private String aboutUs;
 
 	@Column(name = "size", nullable = false, length = 10)
-	private Integer size;
+	private int size;
 
 	@Column(name = "butdget", nullable = false)
 	private BigInteger butdget;
@@ -85,39 +83,4 @@ public class Company implements Serializable {
 
 	@Column(name = "date_update", nullable = true)
 	private String dateUpdate;
-
-	public String validate() {
-		String chain = null;
-		if (!PastleyValidate.isChain(name))
-			chain = "El nombre de la empresa no es valido.";
-		if (!PastleyValidate.isChain(address))
-			chain = "La dirección de empresa no es valida.";
-		if (butdget == null)
-			chain = "El presupuesto de empresa no es valido.";
-		if (!PastleyValidate.isChain(address))
-			chain = "El email de empresa no es valido.";
-		if (!PastleyValidate.isChain(address))
-			chain = "La clave de empresa no es valida.";
-		if (size <= 0)
-			chain = "La cantidad minima de un producto no es valida.";
-		return chain;
-	}
-
-	public void uppercase() {
-		this.name = PastleyValidate.uppercase(name);
-	}
-
-	public void update(Company company) {
-		if(company == null)
-			return;
-		this.desciption = validateInfo(desciption, company.getDesciption());
-		this.mission = validateInfo(mission, company.getMission());
-		this.vision = validateInfo(vision, company.getVision());
-		this.aboutUs = validateInfo(aboutUs, company.getAboutUs());
-		this.logo = validateInfo(aboutUs, company.getLogo());
-	}
-	
-	private String validateInfo(String a, String b) {
-		return PastleyValidate.isChain(a) ? a : PastleyValidate.isChain(b) ? b : a;
-	}
 }

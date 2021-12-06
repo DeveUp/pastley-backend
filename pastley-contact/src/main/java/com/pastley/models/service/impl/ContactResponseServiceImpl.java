@@ -1,21 +1,21 @@
-package com.pastley.application.service;
+package com.pastley.models.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.pastley.application.repository.ContactResponseRepository;
-import com.pastley.domain.ContactResponse;
-import com.pastley.infrastructure.config.PastleyDate;
-import com.pastley.infrastructure.config.PastleyInterface;
-import com.pastley.infrastructure.config.PastleyValidate;
-import com.pastley.infrastructure.exception.PastleyException;
+import com.pastley.models.entity.ContactResponse;
+import com.pastley.models.entity.validator.ContactResponseValidator;
+import com.pastley.models.repository.ContactResponseRepository;
+import com.pastley.models.service.ContactResponseService;
+import com.pastley.models.service.ContactService;
+import com.pastley.util.PastleyDate;
+import com.pastley.util.PastleyValidate;
+import com.pastley.util.exception.PastleyException;
 
 /**
  * @project Pastley-Contact.
@@ -25,24 +25,23 @@ import com.pastley.infrastructure.exception.PastleyException;
  * @version 1.0.0.
  */
 @Service
-public class ContactResponseService implements PastleyInterface<Long, ContactResponse> {
-	
+public class ContactResponseServiceImpl implements ContactResponseService {
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(ContactResponseService.class);
 
 	@Autowired
 	ContactResponseRepository contactResponseRepository;
-	
+
 	@Autowired
-    ContactService contactService;
+	ContactService contactService;
 
 	@Override
 	public ContactResponse findById(Long id) {
-		if (id <= 0)
-			throw new PastleyException(HttpStatus.NOT_FOUND, "El id de la respuesta del contacto no es valido.");
+		if (!PastleyValidate.isLong(id))
+			throw new PastleyException("El id de la respuesta del contacto no es valido.");
 		Optional<ContactResponse> type = contactResponseRepository.findById(id);
 		if (!type.isPresent())
-			throw new PastleyException(HttpStatus.NOT_FOUND,
-					"No se ha encontrado ninguna respuesta del contacto con el id " + id + ".");
+			throw new PastleyException("No se ha encontrado ninguna respuesta del contacto con el id " + id + ".");
 		return type.orElse(null);
 	}
 
@@ -52,36 +51,25 @@ public class ContactResponseService implements PastleyInterface<Long, ContactRes
 	}
 
 	public List<ContactResponse> findByContactAll(Long idContact) {
-		if (idContact <= 0)
-			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del contacto no es valido.");
+		if (!PastleyValidate.isLong(idContact))
+			throw new PastleyException("El id del contacto no es valido.");
 		return contactResponseRepository.findByIdContact(idContact);
 	}
 
 	public List<ContactResponse> findByRangeDateRegister(String start, String end) {
-		String [] arrayDate = PastleyValidate.isRangeDateRegisterValidateDate(start, end);
+		String[] arrayDate = PastleyValidate.isRangeDateRegisterValidateDate(start, end);
 		return contactResponseRepository.findByRangeDateRegister(arrayDate[0], arrayDate[1]);
 	}
 
 	@Override
-	public List<ContactResponse> findByStatuAll(boolean statu) {
-		return new ArrayList<>();
-	}
-
-	@Override
 	public ContactResponse save(ContactResponse entity) {
-		if(entity == null)
-			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido la respuesta del contacto.");
-		String message = entity.validate();
-		if (message != null)
-			throw new PastleyException(HttpStatus.NOT_FOUND,
-					"Se ha presentado un error en la respuesta de contacto, " + message + ".");
-		String messageType = (entity.getId() != null && entity.getId() > 0) ? "actualizar" : "registrar";
+		ContactResponseValidator.validator(entity);
+		String messageType = PastleyValidate.messageToSave((PastleyValidate.isLong(entity.getId()) ? 2 : 1), false);
 		entity.setContact(contactService.findById(entity.getContact().getId()));
-		ContactResponse contactResponse = (entity.getId() != null && entity.getId() > 0) ? saveToUpdate(entity)
+		ContactResponse contactResponse = PastleyValidate.isLong(entity.getId()) ? saveToUpdate(entity)
 				: saveToSave(entity);
 		if (contactResponse == null)
-			throw new PastleyException(HttpStatus.NOT_FOUND,
-					"No se ha " + messageType + " la respuesta del contacto.");
+			throw new PastleyException("No se ha " + messageType + " la respuesta del contacto.");
 		return contactResponse;
 	}
 
@@ -90,17 +78,15 @@ public class ContactResponseService implements PastleyInterface<Long, ContactRes
 		findById(id);
 		contactResponseRepository.deleteById(id);
 		try {
-			if (findById(id) == null) {
+			if (findById(id) == null)
 				return true;
-			}
 		} catch (Exception e) {
 			LOGGER.info("[delete(Long id)]", e);
 			return true;
 		}
-		throw new PastleyException(HttpStatus.NOT_FOUND,
-				"No se ha eliminado la respuesta del contacto con el id " + id + ".");
+		throw new PastleyException("No se ha eliminado la respuesta del contacto con el id " + id + ".");
 	}
-	
+
 	private ContactResponse saveToSave(ContactResponse entity) {
 		PastleyDate date = new PastleyDate();
 		entity.setId(0L);

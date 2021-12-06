@@ -1,6 +1,5 @@
-package com.pastley.infrastructure.controller;
+package com.pastley.controller;
 
-import java.io.Serializable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pastley.application.service.TypePQRService;
-import com.pastley.domain.TypePQR;
+import com.pastley.models.entity.TypePQR;
+import com.pastley.models.service.TypePQRService;
 
 /**
  * @project Pastley-Contact.
@@ -24,10 +23,8 @@ import com.pastley.domain.TypePQR;
  * @version 1.0.0.
  */
 @RestController
-@RequestMapping("typePqr")
-public class TypePQRRes implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+@RequestMapping("type-pqr")
+public class TypePQRRes{
 	
 	@Autowired
 	TypePQRService typePQRService;

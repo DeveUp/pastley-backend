@@ -1,4 +1,4 @@
-package com.pastley.domain;
+package com.pastley.models.entity;
 
 import java.io.Serializable;
 
@@ -12,8 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.pastley.infrastructure.config.PastleyValidate;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,10 +22,10 @@ import lombok.NoArgsConstructor;
  * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
-@Entity
-@Table(name = "contact")
 @Data
 @NoArgsConstructor
+@Entity
+@Table(name = "contact")
 public class Contact implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -62,19 +60,4 @@ public class Contact implements Serializable {
 	private String email;
 	@Transient
 	private String name;
-	
-	public String validate() {
-		String chain = null;
-		if (!PastleyValidate.isChain(message))
-			chain = "El mensaje no es valido.";
-		if (!PastleyValidate.isChain(email))
-			chain = "El email de la persona no es valido.";
-		if (!PastleyValidate.isChain(name))
-			chain = "El nombre de la persona no es valido.";
-		if(document == null || document <= 0)
-			chain = "El documento de la persona no es valido.";
-		if(typePqr == null || typePqr.getId()<= 0)
-			chain = "El id tipo pqr no es valido.";
-		return chain;
-	}
 }
