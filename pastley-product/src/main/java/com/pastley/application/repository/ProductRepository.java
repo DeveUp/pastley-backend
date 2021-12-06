@@ -19,18 +19,18 @@ import com.pastley.domain.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>{
 
-    public Product findByName(String name);
+    Product findByName(String name);
     
-	public List<Product> findByStatu(boolean statu);
+	List<Product> findByStatu(boolean statu);
 	
-	public List<Product> findBySupplies(boolean supplies);
+	List<Product> findBySupplies(boolean supplies);
 	
     @Query(nativeQuery = false, value = "SELECT p FROM Product p WHERE p.category.id = :idCategory")
-    public List<Product> findByIdCategory(@Param("idCategory") Long idCategory);
+    List<Product> findByIdCategory(@Param("idCategory") Long idCategory);
 	
 	@Query(nativeQuery = false, value = "SELECT p FROM Product p WHERE p.discount > 0")
-	public List<Product> findProductByPromotion();
+	List<Product> findProductByPromotion();
 	
 	@Query(nativeQuery = false, value = "SELECT p FROM Product p WHERE p.dateRegister BETWEEN :start AND :end ORDER BY p.dateRegister")
-	public List<Product> findByRangeDateRegister(@Param("start") String start, @Param("end") String end);
+	List<Product> findByRangeDateRegister(@Param("start") String start, @Param("end") String end);
 }

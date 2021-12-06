@@ -19,10 +19,10 @@ import com.pastley.domain.Category;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-	public Category findByName(String name);
+	Category findByName(String name);
 
-	public List<Category> findByStatu(boolean statu);
+	List<Category> findByStatu(boolean statu);
 
 	@Query(nativeQuery = false, value = "SELECT c FROM Category c WHERE c.dateRegister BETWEEN :start AND :end ORDER BY c.dateRegister")
-	public List<Category> findByRangeDateRegister(@Param("start") String start, @Param("end") String end);
+	List<Category> findByRangeDateRegister(@Param("start") String start, @Param("end") String end);
 }
