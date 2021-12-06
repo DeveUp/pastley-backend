@@ -1,8 +1,6 @@
-package com.pastley.domain;
+package com.pastley.models.entity;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,13 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.pastley.infrastructure.config.PastleyValidate;
-import com.sun.istack.NotNull;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,10 +21,10 @@ import lombok.NoArgsConstructor;
  * @contributors serbuitrago.
  * @version 1.0.0.
  */
-@Entity
-@Table(name = "user")
 @Data
 @NoArgsConstructor
+@Entity
+@Table(name = "user")
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -46,13 +39,13 @@ public class User implements Serializable {
 	@Column(name = "points")
 	private Long points;
 
-	@Column(name = "password", nullable = false, length = 50)
+	@Column(name = "password", nullable = false, length = 500)
 	private String password;
 
 	@Column(name = "ip", nullable = true)
 	private String ip;
 
-	@Column(name = "last_password", nullable = true, length = 50)
+	@Column(name = "last_password", nullable = true, length = 500)
 	private String lastPassword;
 
 	@Column(name = "statu", nullable = false, columnDefinition = "tinyint(1) default 1")
@@ -77,44 +70,7 @@ public class User implements Serializable {
 	@JoinColumn(name = "id_person", nullable = false)
 	private Person person;
 	
-	@ManyToMany
-	@NotNull
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id_user"), inverseJoinColumns = @JoinColumn(name = "id_role"))
-	private Set<Role> roles = new HashSet<>();
-
-	/**
-	 * Method that validates the attributes of the class.
-	 * 
-	 * @return The error occurred.
-	 */
-	public String validate() {
-		String chain = null;
-		if (!PastleyValidate.isChain(password)) 
-			chain = "La clave no es valida.";
-		if(!PastleyValidate.isChain(nickname))
-			chain = "El apodo no es valido.";
-		if(person == null) 
-			chain = "No se ha recibido la persona.";	
-		return chain;
-	}
-
-	/**
-	 * 
-	 * @param dateRegister
-	 * @param dateUpdate
-	 */
-	public void date(String dateRegister, String dateUpdate) {
-		this.dateRegister= dateRegister;
-		this.dateUpdate= dateUpdate;
-	}
-	
-	/**
-	 * 
-	 * @param statu
-	 * @param session
-	 */
-	public void is(boolean statu, boolean session) {
-		this.statu = statu;
-		this.session = session;
-	}
+	@ManyToOne
+	@JoinColumn(name = "id_role", nullable = false)
+	private Role role;
 }

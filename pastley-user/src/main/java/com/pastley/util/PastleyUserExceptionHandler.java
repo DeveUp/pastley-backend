@@ -1,8 +1,8 @@
-package com.pastley.infrastructure.config;
+package com.pastley.util;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
-import com.pastley.infrastructure.exception.PastleyExceptionHandler;
+import com.pastley.util.exception.PastleyExceptionHandler;
 
 /**
  * @project Pastley-User.

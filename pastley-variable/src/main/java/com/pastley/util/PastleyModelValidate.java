@@ -16,6 +16,11 @@ public class PastleyModelValidate {
 			throw new PastleyException(message);
 	}
 	
+	public void isEmail(String email, String message) {
+		if(!PastleyValidate.isEmail(email))
+			throw new PastleyException(message);
+	}
+	
 	public void isLong(Long value, String message) {
 		if(!PastleyValidate.isLong(value))
 			throw new PastleyException(message);
