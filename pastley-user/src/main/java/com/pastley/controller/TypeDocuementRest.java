@@ -1,5 +1,4 @@
-package com.pastley.infrastructure.controller;
-
+package com.pastley.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pastley.application.service.RoleService;
-import com.pastley.domain.Role;
+import com.pastley.models.entity.TypeDocument;
+import com.pastley.models.service.TypeDocumentService;
 
 /**
  * @project Pastley-User.
@@ -24,46 +23,45 @@ import com.pastley.domain.Role;
  * @version 1.0.0.
  */
 @RestController
-@RequestMapping("role")
-public class RoleRest {
+@RequestMapping("typeDocument")
+public class TypeDocuementRest {
 	
 	@Autowired
-	private RoleService roleService;
+	TypeDocumentService typeDocumentService;
 
 	@GetMapping(value = { "/find/id/{id}", "/{id}" })
 	public ResponseEntity<?> findById(@PathVariable("id") Long id) {
-		return ResponseEntity.status(HttpStatus.OK).body(roleService.findById(id));
+		return ResponseEntity.status(HttpStatus.OK).body(typeDocumentService.findById(id));
 	}
 	
 	@GetMapping(value = { "/find/name/{name}" })
 	public ResponseEntity<?> findByName(@PathVariable("name") String name) {
-		return ResponseEntity.status(HttpStatus.OK).body(roleService.findByName(name));
+		return ResponseEntity.status(HttpStatus.OK).body(typeDocumentService.findByName(name));
 	}
-
+	
 	@GetMapping(value = { "", "/all" })
 	public ResponseEntity<?> findAll() {
-		return ResponseEntity.status(HttpStatus.OK).body(roleService.findAll());
+		return ResponseEntity.status(HttpStatus.OK).body(typeDocumentService.findAll());
 	}
-
+	
 	@PostMapping()
-	public ResponseEntity<?> create(@RequestBody Role role) {
-		return ResponseEntity.status(HttpStatus.OK).body(roleService.save(role, 1));
+	public ResponseEntity<?> create(@RequestBody TypeDocument typeDocument) {
+		return ResponseEntity.status(HttpStatus.OK).body(typeDocumentService.save(typeDocument, 1));
 	}
-
+	
 	@PutMapping()
-	public ResponseEntity<?> update(@RequestBody Role role) {
-		return ResponseEntity.status(HttpStatus.OK).body(roleService.save(role, 2));
+	public ResponseEntity<?> update(@RequestBody TypeDocument typeDocument) {
+		return ResponseEntity.status(HttpStatus.OK).body(typeDocumentService.save(typeDocument, 2));
 	}
 	
 	@PutMapping(value = "/update/statu/{id}")
-	public ResponseEntity<?> updateRoleStatu(@PathVariable("id") Long id) {
-		Role role = roleService.findById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(roleService.save(role, 3));
+	public ResponseEntity<?> updateStatu(@PathVariable("id") Long id) {
+		TypeDocument typeDocument = typeDocumentService.findById(id);
+		return ResponseEntity.status(HttpStatus.OK).body(typeDocumentService.save(typeDocument, 3));
 	}
-	
 	
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-		return ResponseEntity.status(HttpStatus.OK).body(roleService.delete(id));
+		return ResponseEntity.status(HttpStatus.OK).body(typeDocumentService.delete(id));
 	}
 }
