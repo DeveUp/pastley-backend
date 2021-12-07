@@ -14,6 +14,8 @@ import com.pastley.models.entity.Person;
 public interface PersonService {
 
 	Person findById(Long id);
+	
+	Person findByPhone(String phone);
 
 	Person findByEmail(String email);
 
@@ -24,6 +26,8 @@ public interface PersonService {
 	List<Person> findByIdTypeDocumentAll(Long idTypeDocument);
 
 	Person save(Person entity, int type);
+	
+	Person saveOrUpdate(Person entity);
 
 	boolean delete(Long id);
 }

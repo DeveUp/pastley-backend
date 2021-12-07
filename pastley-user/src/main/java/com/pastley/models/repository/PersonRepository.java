@@ -22,6 +22,9 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 	
 	public Person findByDocument(Long document);
 	
+	@Query(nativeQuery = false, value = "SELECT p FROM Person p WHERE p.phone = :phone")
+	public Person findByPhone(String phone);
+	
 	@Query(nativeQuery = false, value = "SELECT p FROM Person p WHERE p.typeDocument.id = :idTypeDocument")
 	public List<Person> findByIdTypeDocument(Long idTypeDocument);	
 }
