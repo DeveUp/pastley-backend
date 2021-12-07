@@ -18,17 +18,19 @@ import com.pastley.models.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
 	
-	@Query(nativeQuery = true, value = "SELECT u.* FROM user AS u INNER JOIN user_role AS ur ON(u.id = ur.id_user AND ur.id_role = :idRole)")
-	public List<User> findByIdRole(Long idRole);	
-	
 	@Query(nativeQuery = false, value = "SELECT u FROM User u WHERE u.person.document = :document")
-	public User findByDocumentPerson(Long document);	
+	User findByDocumentPerson(Long document);	
 	
 	@Query(nativeQuery = true, value = "SELECT u.* FROM user AS u INNER JOIN user_role AS ur ON(u.id = ur.id_user AND ur.id_role = :idRole) WHERE u.id = :id")
-	public User findByIdAndIdRol(Long id, Long idRole);
+	User findByIdAndIdRol(Long id, Long idRole);
 	
-    public User findByNickname(String nickname);
+    User findByNickname(String nickname);
     
     @Query(nativeQuery= true, value ="INSERT INTO user_role(id_user, id_role) values (:id, :idRole)")
-    public User createUserRole(Long id, Long idRole); 
+    User createUserRole(Long id, Long idRole); 
+    
+    List<User> findByStatu(boolean statu);
+    
+	@Query(nativeQuery = true, value = "SELECT u.* FROM user AS u INNER JOIN user_role AS ur ON(u.id = ur.id_user AND ur.id_role = :idRole)")
+	List<User> findByIdRole(Long idRole);	
 }
