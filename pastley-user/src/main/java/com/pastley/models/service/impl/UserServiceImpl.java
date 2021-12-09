@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.pastley.models.entity.Person;
 import com.pastley.models.entity.User;
 import com.pastley.models.entity.validator.UserValidator;
 import com.pastley.models.repository.UserRepository;
@@ -40,9 +40,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserRepository userRepository;
 
-	@Autowired
-	private BCryptPasswordEncoder passwordEncode;
-
 	@Override
 	public User findById(Long id) {
 		if (!PastleyValidate.isLong(id))
@@ -64,24 +61,25 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findByIdAndIdRol(Long id, Long idRole) {
-		if (!PastleyValidate.isLong(id))
-			throw new PastleyException("El id del usuario no es valido.");
-		if (!PastleyValidate.isLong(idRole))
-			throw new PastleyException("El id del rol no es valido.");
-		User user = userRepository.findByIdAndIdRol(id, idRole);
-		if (user == null)
-			throw new PastleyException("No existe ningun usuario con el id " + id + " y el rol con id " + idRole + ".");
-		return user;
-	}
-
-	@Override
 	public User findByDocumentPerson(Long documentPerson) {
 		if (!PastleyValidate.isLong(documentPerson))
 			throw new PastleyException("El documento de la persona no es valido.");
 		User user = userRepository.findByDocumentPerson(documentPerson);
 		if (user == null)
 			throw new PastleyException("No existe ningun usuario con el documento " + documentPerson + ".");
+		return user;
+	}
+
+	@Override
+	public User findByNicknameAndIdRol(String nickname, Long idRole) {
+		if (!PastleyValidate.isChain(nickname))
+			throw new PastleyException("El apodo del usuario no es valido.");
+		if (!PastleyValidate.isLong(idRole))
+			throw new PastleyException("El id del rol no es valido.");
+		User user = userRepository.findByNicknameAndIdRol(nickname, idRole);
+		if (user == null)
+			throw new PastleyException(
+					"No existe ningun usuario con el apodo " + nickname + " y id rol " + idRole + ".");
 		return user;
 	}
 
@@ -103,14 +101,39 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public User saveAndPersonSaveOrUpdate(User entity) {
+		UserValidator.validatorStrict(entity);
+		User user = new User();
+		Person person = personService.saveOrUpdate(entity.getPerson());
+		boolean error = false;
+		try {
+			user = findByNickName(entity.getNickname());
+			entity.setId(user.getId());
+			entity.setPerson(person);
+			error = true;
+			user = save(entity, entity.getRole().getId(), 2);
+		} catch (PastleyException e) {
+			LOGGER.error("[saveAndPersonSaveOrUpdate(User entity)]: User", e);
+			if (!error)
+				user = save(entity, entity.getRole().getId(), 1);
+			else
+				throw new PastleyException(e.getMessage());
+		}
+		return user;
+	}
+
+	@Override
 	public User save(User entity, Long idRole, int type) {
-		UserValidator.validator(entity);
+		UserValidator.validatorPerson(entity);
 		String messageType = PastleyValidate.messageToSave(type, false);
 		if (type == 1 || type == 2) {
 			entity.setRole(roleService.findById(idRole));
 			entity.setPerson(personService.findByDocument(entity.getPerson().getDocument()));
+			if(!validateNicknameAndRole(entity.getNickname(), idRole))
+				throw new PastleyException("Ya existe un usuario con ese apodo y rol.");
 		}
-		entity = PastleyValidate.isLong(idRole) ? saveToUpdate(entity, idRole, type) : saveToSave(entity, idRole, type);
+		entity = PastleyValidate.isLong(entity.getId()) ? saveToUpdate(entity, idRole, type)
+				: saveToSave(entity, idRole, type);
 		entity = userRepository.save(entity);
 		if (entity == null)
 			throw new PastleyException("No se ha " + messageType + " usuario.");
@@ -142,10 +165,10 @@ public class UserServiceImpl implements UserService {
 			throw new PastleyException("Ya existe una persona con el apodo " + entity.getNickname() + ".");
 		PastleyDate date = new PastleyDate();
 		entity.setId(0L);
-		entity.setPassword(passwordEncode.encode(entity.getPassword()));
+		// entity.setPassword(passwordEncode.encode(entity.getPassword()));
 		entity.setSession(false);
 		entity.setStatu(true);
-		entity.setDateSession(date.currentToDateTime(null));
+		entity.setDateRegister(date.currentToDateTime(null));
 		entity.setDateUpdate(null);
 		entity.setDateSession(null);
 		entity.setDateLastDate(null);
@@ -161,10 +184,22 @@ public class UserServiceImpl implements UserService {
 				throw new PastleyException("Ya existe un usuario con ese apodo " + entity.getNickname() + ".");
 		}
 		PastleyDate date = new PastleyDate();
+		// entity.setPassword(type == 2 ? passwordEncode.encode(entity.getPassword()) :
+		// user.getPassword());
 		entity.setDateRegister(type == 2 ? user.getDateRegister() : entity.getDateRegister());
 		entity.setDateUpdate(date.currentToDateTime(null));
 		entity.setStatu(type == 3 ? !entity.isStatu() : type == 2 ? user.isStatu() : entity.isStatu());
 		return entity;
+	}
+	
+	private boolean validateNicknameAndRole(String nickname, Long idRole) {
+		User user = null;
+		try {
+			user = findByNicknameAndIdRol(nickname, idRole);
+		} catch (PastleyException e) {
+			LOGGER.error("[validateNicknameAndRole(String nickname, Long idRole)]", e);
+		}
+		return (user == null) ? true : false;
 	}
 
 	private boolean validateNickname(String nickname) {

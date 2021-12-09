@@ -17,9 +17,9 @@ public interface UserService {
 
 	User findByNickName(String nickname);
 
-	User findByIdAndIdRol(Long id, Long idRole);
-
 	User findByDocumentPerson(Long documentPerson);
+	
+	User findByNicknameAndIdRol(String nickname, Long idRole);
 
 	List<User> findAll();
 
@@ -28,6 +28,8 @@ public interface UserService {
 	List<User> findByIdRole(Long idRole);
 
 	User save(User entity, Long idRole, int type);
+	
+	User saveAndPersonSaveOrUpdate(User entity);
 
 	boolean delete(Long id);
 }
