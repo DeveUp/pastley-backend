@@ -1,5 +1,4 @@
-package com.pastley.infrastructure.controller;
-
+package com.pastley.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pastley.application.service.MethodPayService;
-import com.pastley.domain.MethodPay;
+import com.pastley.models.entity.MethodPay;
+import com.pastley.models.service.MethodPayService;
 
 /**
  * @project Pastley-Sale.

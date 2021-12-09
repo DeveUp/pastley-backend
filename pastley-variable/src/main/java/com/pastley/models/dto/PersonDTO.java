@@ -1,4 +1,4 @@
-package com.pastley.infrastructure.dto;
+package com.pastley.models.dto;
 
 import java.io.Serializable;
 
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class PersonModel implements Serializable {
+public class PersonDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,12 +28,12 @@ public class PersonModel implements Serializable {
 	private String dateBirthday;
 	private Long idTypeDocument;
 
-	public PersonModel(Long document, String name, String subname, String phone, String email, String address,
+	public PersonDTO(Long document, String name, String subname, String phone, String email, String address,
 			String dateBirthday, Long idTypeDocument) {
 		this(0L, document, name, subname, phone, email, address, dateBirthday, idTypeDocument);
 	}
 
-	public PersonModel(Long id, Long document, String name, String subname, String phone, String email, String address,
+	public PersonDTO(Long id, Long document, String name, String subname, String phone, String email, String address,
 			String dateBirthday, Long idTypeDocument) {
 		this.id = id;
 		this.document = document;

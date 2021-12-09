@@ -1,4 +1,4 @@
-package com.pastley.infrastructure.dto;
+package com.pastley.models.dto;
 
 import java.io.Serializable;
 
@@ -14,18 +14,18 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class RoleModel implements Serializable {
+public class RoleDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
 	private String name;
 
-	public RoleModel(String name) {
+	public RoleDTO(String name) {
 		this(0L, name);
 	}
 	
-	public RoleModel(Long id, String name) {
+	public RoleDTO(Long id, String name) {
 		this.id = id;
 		this.name = name;
 	}

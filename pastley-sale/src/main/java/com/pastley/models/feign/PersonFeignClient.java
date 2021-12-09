@@ -1,17 +1,17 @@
-package com.pastley.infrastructure.feign;
+package com.pastley.models.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.pastley.infrastructure.dto.PersonModel;
+import com.pastley.models.dto.PersonDTO;
 
 /**
  * @project Pastley-Sale.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/SerBuitrago.
- * @contributors soleimygomez, leynerjoseoa, jhonatanbeltran.
+ * @contributors leynerjoseoa.
  * @version 1.0.0.
  */
 @FeignClient(name = "pastley-user")
@@ -19,5 +19,5 @@ import com.pastley.infrastructure.dto.PersonModel;
 public interface PersonFeignClient {
 
 	@GetMapping(value = { "/findByDocument/{document}" })
-	public PersonModel findByDocument(@PathVariable("document") Long document);
+	public PersonDTO findByDocument(@PathVariable("document") Long document);
 }

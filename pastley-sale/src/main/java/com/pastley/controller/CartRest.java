@@ -1,4 +1,4 @@
-package com.pastley.infrastructure.controller;
+package com.pastley.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pastley.application.service.CartService;
-import com.pastley.domain.Cart;
-import com.pastley.infrastructure.config.PastleyVariable;
-import com.pastley.infrastructure.exception.PastleyExceptionModel;
+import com.pastley.models.entity.Cart;
+import com.pastley.models.service.CartService;
+import com.pastley.util.PastleyVariable;
+import com.pastley.util.exception.PastleyExceptionModel;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 

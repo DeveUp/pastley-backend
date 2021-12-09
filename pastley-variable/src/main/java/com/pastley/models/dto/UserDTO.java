@@ -1,4 +1,4 @@
-package com.pastley.infrastructure.dto;
+package com.pastley.models.dto;
 
 import java.io.Serializable;
 
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class UserModel implements Serializable {
+public class UserDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,15 +24,15 @@ public class UserModel implements Serializable {
 	private String ip;
 	private boolean statu;
 	private boolean session;
-	private PersonModel person;
-	private RoleModel role;
+	private PersonDTO person;
+	private RoleDTO role;
 	
-	public UserModel(String ip, boolean statu, boolean session, PersonModel person, RoleModel role) {
+	public UserDTO(String ip, boolean statu, boolean session, PersonDTO person, RoleDTO role) {
 		this(0L, 0L, ip, statu, session, person, role);
 	}
 
-	public UserModel(Long id, Long points, String ip, boolean statu, boolean session, PersonModel person,
-			RoleModel role) {
+	public UserDTO(Long id, Long points, String ip, boolean statu, boolean session, PersonDTO person,
+			RoleDTO role) {
 		this.id = id;
 		this.points = points;
 		this.ip = ip;

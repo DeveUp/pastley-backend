@@ -1,4 +1,4 @@
-package com.pastley.domain;
+package com.pastley.models.entity;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -10,9 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import com.pastley.infrastructure.config.PastleyValidate;
-import com.pastley.infrastructure.dto.ProductDTO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,7 +43,7 @@ public class Cart implements Serializable {
 	@Column(name = "discount", nullable = false, columnDefinition = "varchar(3) default 0")
 	private String discount;
 
-	@Column(name = "vat", nullable = false, length = 3)
+	@Column(name = "vat", nullable = false, columnDefinition = "varchar(3) default 0")
 	private String vat;
 
 	@Column(name = "count", nullable = false)
@@ -77,7 +74,6 @@ public class Cart implements Serializable {
 	private BigInteger otherPriceVat;
 	@Transient 
 	private BigInteger otherPriceAddPriceVat;
-	
 	@Transient 
 	private BigInteger otherPriceDisount;
 	@Transient 
@@ -99,65 +95,5 @@ public class Cart implements Serializable {
 		this.discount = discount;
 		this.vat = vat;
 		this.price = price;
-	}
-	
-	public String validate(boolean isPrice) {
-		String chain = null;
-		if(idProduct <= 0)
-			chain = "El id del producto debe ser mayor a cero.";
-		if(idCustomer <= 0)
-			chain = "El id del cliente debe ser mayor a cero.";
-		if(isPrice && !PastleyValidate.bigIntegerHigherZero(price))
-			chain = "El precio del producto debe ser mayor a cero.";
-		if(count < 0) 
-			chain = "La cantidad debe ser mayor a cero.";
-		return chain;
-	}
-
-	/**
-	 * Method that allows all prices to be calculated.
-	 */
-	public void calculate() {
-		if(this.count <= 0) return;
-		ProductDTO pm = new ProductDTO(this.price, this.discount, this.vat);
-		pm.calculate();
-		this.otherPriceVat = pm.getPriceVat();
-		this.otherPriceAddPriceVat = pm.calculatePriceAddPriceIva();
-		this.otherPriceDisount = pm.getPriceDiscount();
-		this.otherPriceSubPriceDisount = pm.calculatePriceSubDiscount();
-		calculateSubtotalPriceDisount(pm);
-		calculateSubtotalNet(pm);
-		calculateSubtotalGross(pm);
-	}
-	
-	/**
-	 * Method for calculating the gross subtotal.
-	 * @return The value obtained.
-	 */
-	public BigInteger calculateSubtotalGross(ProductDTO pm) {
-		pm = (pm != null) ? pm : new ProductDTO(this.price, this.discount, this.vat);
-		this.subtotalGross = pm.calculateSubtotalGross().multiply(new BigInteger(String.valueOf(this.count)));
-		return this.subtotalGross;
-	}
-	
-	/**
-	 * Method for calculating the net subtotal.
-	 * @return The value obtained.
-	 */
-	public BigInteger calculateSubtotalNet(ProductDTO pm) {
-		pm = (pm != null) ? pm : new ProductDTO(this.price, this.discount, this.vat);
-		this.subtotalNet = pm.calculateSubTotalNet().multiply(new BigInteger(String.valueOf(this.count)));
-		return this.subtotalNet;
-	}
-	
-	/**
-	 * Method that allows calculating the subtotal of discount applied.
-	 * @return The value obtained.
-	 */
-	public BigInteger calculateSubtotalPriceDisount(ProductDTO pm) {
-		pm = (pm != null) ? pm : new ProductDTO(this.price, this.discount, this.vat);
-		pm.calculateDiscount();
-		this.otherSubtotalPriceDisount = pm.getPriceDiscount().multiply(new BigInteger(String.valueOf(this.count)));
-		return this.otherSubtotalPriceDisount;
 	}
 }

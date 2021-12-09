@@ -1,4 +1,4 @@
-package com.pastley.domain;
+package com.pastley.models.entity;
 
 import java.io.Serializable;
 
@@ -40,19 +40,4 @@ public class SaleDetail implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "id_cart", nullable = false)
 	private Cart cart;
-
-	/**
-	 * Method that validates the attributes of the class.
-	 * 
-	 * @param isId, Represents if you want to validate the id.
-	 * @return A string with the error occurred.
-	 */
-	public String validate() {
-		String chain = null;
-		if (idSale <= 0)
-			chain = "No has seleccionado la venta que esta asociada a este detalle.";
-		if (cart == null || cart.getId() <= 0)
-			chain = "El producto del carrito no es valido.";
-		return chain;
-	}
 }
