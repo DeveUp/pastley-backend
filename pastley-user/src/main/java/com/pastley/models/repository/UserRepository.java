@@ -21,16 +21,13 @@ public interface UserRepository extends JpaRepository<User,Long> {
 	@Query(nativeQuery = false, value = "SELECT u FROM User u WHERE u.person.document = :document")
 	User findByDocumentPerson(Long document);	
 	
-	@Query(nativeQuery = true, value = "SELECT u.* FROM user AS u INNER JOIN user_role AS ur ON(u.id = ur.id_user AND ur.id_role = :idRole) WHERE u.id = :id")
-	User findByIdAndIdRol(Long id, Long idRole);
+	@Query(nativeQuery = false, value = "SELECT u FROM User u WHERE u.nickname = :nickname AND u.role.id = :idRole")
+	User findByNicknameAndIdRol(String nickname, Long idRole);
 	
     User findByNickname(String nickname);
     
-    @Query(nativeQuery= true, value ="INSERT INTO user_role(id_user, id_role) values (:id, :idRole)")
-    User createUserRole(Long id, Long idRole); 
-    
     List<User> findByStatu(boolean statu);
     
-	@Query(nativeQuery = true, value = "SELECT u.* FROM user AS u INNER JOIN user_role AS ur ON(u.id = ur.id_user AND ur.id_role = :idRole)")
+	@Query(nativeQuery = false, value = "SELECT u FROM User u WHERE u.role.id = :idRole")
 	List<User> findByIdRole(Long idRole);	
 }

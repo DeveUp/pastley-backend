@@ -23,12 +23,18 @@ public class UserValidator {
 		validate.isString(user.getNickname(), "El apodo del usuario no es valido.");
 		validate.isString(user.getPassword(), "La clave del usuario no es valida.");
 	}
+	
+	public static void validatorPerson(User user) throws PastleyException {
+		validator(user);
+		validate.isLong(user.getPerson().getDocument(), "La persona del usuario no es valida.");
+	}
 
 	public static void validatorStrict(User user) throws PastleyException {
-		validator(user);
+		validatorPerson(user);
 		if (user.getRole() == null)
 			throw new PastleyException("No se ha podido validar el rol del usuario.");
-		validate.isLong(user.getPerson().getId(), "La persona del usuario no es valida.");
 		validate.isLong(user.getRole().getId(), "El rol del usuario no es valido.");
 	}
+	
+
 }

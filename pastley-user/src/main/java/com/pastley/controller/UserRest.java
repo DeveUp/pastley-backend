@@ -48,19 +48,19 @@ public class UserRest implements Serializable {
 		return ResponseEntity.status(HttpStatus.OK).body(userService.findByDocumentPerson(documentPerson));
 	}
 	
-	@GetMapping(value = { "/find/cashier/id/{id}"})
-	public ResponseEntity<?> findByIdAndIdRolCashier(@PathVariable("id") Long id){
-		return ResponseEntity.status(HttpStatus.OK).body(userService.findByIdAndIdRol(id, PastleyVariable.PASTLEY_USER_CASHIER_ID));
+	@GetMapping(value = { "/find/cashier/nickname/{nickname}"})
+	public ResponseEntity<?> findByNicknameAndIdRolCashier(@PathVariable("nickname") String nickname){
+		return ResponseEntity.status(HttpStatus.OK).body(userService.findByNicknameAndIdRol(nickname, PastleyVariable.PASTLEY_USER_CASHIER_ID));
 	}
 	
-	@GetMapping(value = { "/find/customer/id/{id}"})
-	public ResponseEntity<?> findByIdAndIdRolCustomer(@PathVariable("id") Long id){
-		return ResponseEntity.status(HttpStatus.OK).body(userService.findByIdAndIdRol(id, PastleyVariable.PASTLEY_USER_CUSTOMER_ID));
+	@GetMapping(value = { "/find/customer/nickname/{nickname}"})
+	public ResponseEntity<?> findByNicknameAndIdRolCustomer(@PathVariable("nickname") String nickname){
+		return ResponseEntity.status(HttpStatus.OK).body(userService.findByNicknameAndIdRol(nickname, PastleyVariable.PASTLEY_USER_CUSTOMER_ID));
 	}
 
-	@GetMapping(value = { "/find/administrator/id/{id}"})
-	public ResponseEntity<?> findByIdAndIdRolAdministrator(@PathVariable("id") Long id){
-		return ResponseEntity.status(HttpStatus.OK).body(userService.findByIdAndIdRol(id, PastleyVariable.PASTLEY_USER_ADMINISTRATOR_ID));
+	@GetMapping(value = { "/find/administrator/nickname/{nickname}"})
+	public ResponseEntity<?> findByNicknameAndIdRolAdministrator(@PathVariable("nickname") String nickname){
+		return ResponseEntity.status(HttpStatus.OK).body(userService.findByNicknameAndIdRol(nickname, PastleyVariable.PASTLEY_USER_ADMINISTRATOR_ID));
 	}
 
 	@GetMapping(value = {"", "/all"})
@@ -86,6 +86,11 @@ public class UserRest implements Serializable {
 	@PostMapping(value = "/administrator")
 	public ResponseEntity<?> createAdministrator(@RequestBody User user){
 		return ResponseEntity.status(HttpStatus.OK).body(userService.save(user, PastleyVariable.PASTLEY_USER_ADMINISTRATOR_ID, 1));
+	}
+	
+	@PostMapping(value = "/user/person")
+	public ResponseEntity<?> createCustomerPerson(@RequestBody User user){
+		return ResponseEntity.status(HttpStatus.OK).body(userService.saveAndPersonSaveOrUpdate(user));
 	}
 	
 	@PutMapping(value = "/customer")
