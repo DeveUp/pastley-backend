@@ -71,6 +71,8 @@ public class Cart implements Serializable {
 	private String dateUpdate;
 	
 	@Transient
+	private Long documentCustomer;
+	@Transient
 	private BigInteger otherPriceVat;
 	@Transient 
 	private BigInteger otherPriceAddPriceVat;

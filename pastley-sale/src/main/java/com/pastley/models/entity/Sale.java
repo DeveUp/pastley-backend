@@ -38,8 +38,8 @@ public class Sale implements Serializable{
 	@Column(name="id_coustomer", nullable = false)
 	private Long idCoustomer;
 	
-	@Column(name="iva", nullable = false, columnDefinition = "varchar(3) default 0")
-	private String iva;
+	@Column(name="vat", nullable = false, columnDefinition = "varchar(3) default 0")
+	private String vat;
 	
 	@Column(name="total_net", nullable = false)
 	private BigInteger totalNet;
