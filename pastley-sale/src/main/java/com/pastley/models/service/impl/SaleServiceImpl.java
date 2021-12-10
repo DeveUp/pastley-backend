@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.pastley.models.dto.ProductDTO;
 import com.pastley.models.entity.Sale;
 import com.pastley.models.service.SaleService;
 
@@ -75,6 +76,11 @@ public class SaleServiceImpl implements SaleService{
 	public boolean delete(Long id) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	@Override
+	public ProductDTO findProductById(Long idProduct) {
+		return null;
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.pastley.models.entity.calculate;
 
+import com.pastley.models.entity.Cart;
+
 /**
  * @project Pastley-Sale.
  * @author Sergio Stives Barrios Buitrago.
@@ -8,5 +10,7 @@ package com.pastley.models.entity.calculate;
  * @version 1.0.0.
  */
 public class CartCalculate {
-
+	public static Cart calculate(Cart cart) {
+		return cart;
+	}
 }

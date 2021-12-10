@@ -24,7 +24,7 @@ public interface SaleRepository extends JpaRepository<Sale, Long>{
 	
 	public List<Sale> findByIdCoustomer(Long idCoustomer);
 	
-	public List<Sale> findByIdMethodPay(Long idMethodPay);
+	public List<Sale> findByMethodPay(Long idMethodPay);
 	
 	@Query(nativeQuery = false, value = "SELECT s FROM Sale s WHERE s.dateRegister BETWEEN :start AND :end ORDER BY s.dateRegister")
 	public List<Sale> findByRangeDateRegister(@Param("start") String start, @Param("end") String end);

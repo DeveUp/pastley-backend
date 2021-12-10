@@ -2,6 +2,7 @@ package com.pastley.models.service;
 
 import java.util.List;
 
+import com.pastley.models.dto.ProductDTO;
 import com.pastley.models.entity.Sale;
 
 /**
@@ -32,4 +33,6 @@ public interface SaleService{
 	Sale save(Sale entity, int type);
 
 	boolean delete(Long id);
+	
+	ProductDTO findProductById(Long idProduct);
 }

@@ -26,6 +26,6 @@ public interface MethodPayRepository extends JpaRepository<MethodPay, Long>{
 	@Query(nativeQuery = false, value = "SELECT mp FROM MethodPay mp WHERE mp.dateRegister BETWEEN :start AND :end ORDER BY mp.dateRegister")
 	public List<MethodPay> findByRangeDateRegister(@Param("start") String start, @Param("end") String end);
 	
-	@Query(nativeQuery = false, value = "SELECT COUNT(s.idMethodPay) FROM Sale s WHERE s.idMethodPay = :id GROUP BY s.idMethodPay")
+	@Query(nativeQuery = false, value = "SELECT COUNT(s.methodPay.id) FROM Sale s WHERE s.methodPay.id = :id GROUP BY s.methodPay.id")
 	public Long countByMethodPaySale(Long id);
 }

@@ -146,7 +146,7 @@ public class MethodPayServiceImpl implements MethodPayService{
 		uppercase(entity);
 		entity.setDateRegister((type == 3) ? entity.getDateRegister() : method.getDateRegister());
 		entity.setDateUpdate(date.currentToDateTime(null));
-		entity.setStatu((type == 3) ? !entity.isStatu() : entity.isStatu());
+		entity.setStatu((type == 3) ? !entity.isStatu() : type == 2 ? method.isStatu() : entity.isStatu());
 		return entity;
 	}
 	
