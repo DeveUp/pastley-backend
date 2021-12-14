@@ -7,6 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pastley.models.dto.UserDTO;
 
+/**
+ * @project Pastley-Auth.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/SerBuitrago.
+ * @contributors leynerjoseoa.
+ * @version 1.0.0.
+ */
 @FeignClient(name="pastley-user")
 @RequestMapping("/user")
 public interface UserFeignClient {

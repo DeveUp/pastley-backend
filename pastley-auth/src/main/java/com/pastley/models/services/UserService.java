@@ -18,6 +18,13 @@ import com.pastley.models.dto.UserDTO;
 
 import feign.FeignException;
 
+/**
+ * @project Pastley-Auth.
+ * @author Sergio Stives Barrios Buitrago.
+ * @Github https://github.com/SerBuitrago.
+ * @contributors leynerjoseoa.
+ * @version 1.0.0.
+ */
 @Service
 public class UserService implements UserDetailsService {
 
