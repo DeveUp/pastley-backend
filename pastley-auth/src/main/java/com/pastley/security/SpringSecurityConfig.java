@@ -1,4 +1,4 @@
-package com.pastley.infrastructure.security;
+package com.pastley.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

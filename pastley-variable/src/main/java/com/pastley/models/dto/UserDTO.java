@@ -22,6 +22,7 @@ public class UserDTO implements Serializable {
 
 	private Long points;
 	private String ip;
+	private String password;
 	private boolean statu;
 	private boolean session;
 	private PersonDTO person;

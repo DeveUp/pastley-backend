@@ -1,4 +1,4 @@
-package com.pastley.infrastructure.security;
+package com.pastley.security;
 
 import java.util.Date;
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package com.pastley.application.services;
+package com.pastley.models.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.pastley.domain.UserModel;
-import com.pastley.infrastructure.client.UserFeignClient;
+import com.pastley.models.client.UserFeignClient;
+import com.pastley.models.dto.UserDTO;
 
 import feign.FeignException;
 
@@ -29,7 +29,7 @@ public class UserService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		try {
-			UserModel userModel = findByNickname(username);
+			UserDTO userModel = findByNickname(username);
 			List<GrantedAuthority> authorities = new ArrayList<>();
 			return new User(userModel.getPerson().getEmail(), userModel.getPassword(), authorities);
 
@@ -39,7 +39,7 @@ public class UserService implements UserDetailsService {
 		}
 	}
 	
-	public UserModel findByNickname(String nickname) {
+	public UserDTO findByNickname(String nickname) {
 		return userFeignClient.findByNickname(nickname);
 	}
 }
