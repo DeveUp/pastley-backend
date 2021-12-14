@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.pastley.models.dto.UserDTO;
 import com.pastley.models.service.AuthService;
 import com.pastley.models.service.UserService;
-import com.pastley.security.JWTUtil;
 import com.pastley.util.PastleyValidate;
 import com.pastley.util.exception.PastleyException;
 
@@ -34,28 +33,22 @@ public class AuthServiceImpl implements AuthService {
 	AuthenticationManager authenticationManager;
 
 	@Autowired
-	JWTUtil jwtUtil;
-
-	@Autowired
 	UserService userService;
-
-	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
 
 	@Override
 	public UserDTO findUserName(String token) {
 		if (!findIsToken(token))
 			throw new PastleyException("El token no es valido.");
-		return userService.findByNickname(jwtUtil.extractUsername(token));
+		//return userService.findByNickname(jwtUtil.extractUsername(token));
+		return new UserDTO();
 	}
 
 	@Override
 	public boolean findIsToken(String token) {
 		if (!PastleyValidate.isChain(token))
 			throw new PastleyException("El token se ha podido validar, no ha llegado o ha llegado vacio.");
-		return jwtUtil.isTokenValid(token);
+		//return jwtUtil.isTokenValid(token);
+		return false;
 	}
 
 	@Override
@@ -70,7 +63,8 @@ public class AuthServiceImpl implements AuthService {
 		try {
 			authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(userDTO.getNickname(), userDTO.getPassword()));
-			return jwtUtil.generateToken(userDetails);
+			//return jwtUtil.generateToken(userDetails);
+			return "";
 		} catch (BadCredentialsException e) {
 			LOGGER.error("[login(UserDTO userDTO)]", e);
 		}
@@ -81,7 +75,7 @@ public class AuthServiceImpl implements AuthService {
 	public boolean logout(String token) {
 		if (!findIsToken(token))
 			throw new PastleyException("No hay ningun usuario logeado con ese token.");
-		jwtUtil.removeToken(token);
+		//jwtUtil.removeToken(token);
 		return true;
 	}
 }
