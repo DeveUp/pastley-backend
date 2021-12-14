@@ -10,12 +10,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.pastley.models.client.UserFeignClient;
 import com.pastley.models.dto.UserDTO;
 import com.pastley.models.service.UserService;
+import com.pastley.util.exception.PastleyException;
 
 import feign.FeignException;
 
@@ -35,14 +35,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	private UserFeignClient userFeignClient;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username){
 		try {
 			UserDTO userModel = findByNickname(username);
 			List<GrantedAuthority> authorities = new ArrayList<>();
 			return new User(userModel.getNickname(), userModel.getPassword(), authorities);
 		} catch (FeignException e) {
 			LOGGER.error("[loadUserByUsername(String username) throws UsernameNotFoundException]", 2);
-			throw new UsernameNotFoundException("No se ha encontra ningun usuario con ese apodo.");
+			throw new PastleyException("No se ha encontra ningun usuario con ese apodo "+username+".");
 		}
 	}
 

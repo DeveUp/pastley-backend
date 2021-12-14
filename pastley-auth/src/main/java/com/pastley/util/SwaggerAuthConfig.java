@@ -10,7 +10,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * @project Pastley-Contact.
+ * @project Pastley-Auth.
  * @author Sergio Stives Barrios Buitrago.
  * @Github https://github.com/serbuitrago.
  * @contributors leynerjoseoa.
