@@ -82,7 +82,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-		
+
 		<!-- -->
 		<!-- RESILIENCE4J -->
 		<!-- -->
@@ -90,7 +90,7 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
 		</dependency>
-		
+
 		<!-- -->
 		<!-- AOP -->
 		<!-- -->
@@ -123,28 +123,23 @@
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- -->
 		<!-- SECURITY -->
 		<!-- -->
 		<dependency>
-			<groupId>org.springframework.security.oauth</groupId>
-			<artifactId>spring-security-oauth2</artifactId>
-			<version>2.3.8.RELEASE</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
 		<!-- -->
 		<!-- JWT -->
 		<!-- -->
 		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-jwt</artifactId>
-			<version>1.1.1.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jaxb</groupId>
-			<artifactId>jaxb-runtime</artifactId>
-		</dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
 
 		<!-- -->
 		<!-- SWAGGER -->
