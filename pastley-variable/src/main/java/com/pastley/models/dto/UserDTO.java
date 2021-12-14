@@ -19,9 +19,9 @@ public class UserDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-
 	private Long points;
 	private String ip;
+	private String nickname;
 	private String password;
 	private boolean statu;
 	private boolean session;

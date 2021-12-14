@@ -1,4 +1,4 @@
-package com.pastley.models.services;
+package com.pastley.models.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.pastley.models.client.UserFeignClient;
 import com.pastley.models.dto.UserDTO;
+import com.pastley.models.service.UserService;
 
 import feign.FeignException;
 
@@ -26,9 +27,9 @@ import feign.FeignException;
  * @version 1.0.0.
  */
 @Service
-public class UserService implements UserDetailsService {
-
-	private Logger LOGGER = LoggerFactory.getLogger(UserService.class);
+public class UserServiceImpl implements UserService, UserDetailsService {
+	
+	private Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	@Autowired
 	private UserFeignClient userFeignClient;
@@ -38,14 +39,14 @@ public class UserService implements UserDetailsService {
 		try {
 			UserDTO userModel = findByNickname(username);
 			List<GrantedAuthority> authorities = new ArrayList<>();
-			return new User(userModel.getPerson().getEmail(), userModel.getPassword(), authorities);
-
+			return new User(userModel.getNickname(), userModel.getPassword(), authorities);
 		} catch (FeignException e) {
 			LOGGER.error("[loadUserByUsername(String username) throws UsernameNotFoundException]", 2);
 			throw new UsernameNotFoundException("No se ha encontra ningun usuario con ese apodo.");
 		}
 	}
-	
+
+	@Override
 	public UserDTO findByNickname(String nickname) {
 		return userFeignClient.findByNickname(nickname);
 	}
