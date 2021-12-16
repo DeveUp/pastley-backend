@@ -26,7 +26,7 @@ spring:
         - id: pastley-user
           uri: lb://pastley-user
           predicates:
-            - Path=/person/**,/user/**,/typeDocument/**,/role/**
+            - Path=/person/**,/user/**,/type-document/**,/role/**
         - id: pastley-auth
           uri: lb://pastley-auth
           predicates:
@@ -38,5 +38,5 @@ spring:
         - id: pastley-contact
           uri: lb://pastley-contact
           predicates:
-            - Path=/contact/**,/contactResponse/**,/company/**,/typePqr/**
+            - Path=/contact/**,/contact-response/**,/company/**,/type-pqr/**
 
