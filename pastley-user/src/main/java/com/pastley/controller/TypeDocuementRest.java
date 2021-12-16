@@ -23,7 +23,7 @@ import com.pastley.models.service.TypeDocumentService;
  * @version 1.0.0.
  */
 @RestController
-@RequestMapping("typeDocument")
+@RequestMapping("type-document")
 public class TypeDocuementRest {
 	
 	@Autowired
