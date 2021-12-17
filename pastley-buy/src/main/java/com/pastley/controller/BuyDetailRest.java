@@ -1,4 +1,4 @@
-package com.pastley.infrastructure.controller;
+package com.pastley.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pastley.application.service.BuyDetailService;
-import com.pastley.domain.BuyDetail;
+import com.pastley.models.domain.BuyDetail;
+import com.pastley.models.service.BuyDetailService;
 
 /**
  * @project Pastley-Buy.

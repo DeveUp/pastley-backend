@@ -1,4 +1,4 @@
-package com.pastley.domain;
+package com.pastley.models.domain;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -13,8 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.pastley.infrastructure.dto.SaleDTO;
-import com.pastley.infrastructure.config.PastleyValidate;
+import com.pastley.models.dto.SaleDTO;
+import com.pastley.util.PastleyValidate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

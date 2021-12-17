@@ -1,4 +1,4 @@
-package com.pastley.application.repository;
+package com.pastley.models.repository;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.pastley.domain.BuyDetail;
+import com.pastley.models.domain.BuyDetail;
 
 @Repository
 public interface BuyDetailRepository extends JpaRepository<BuyDetail, Long> {

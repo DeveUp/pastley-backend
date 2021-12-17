@@ -29,8 +29,8 @@ public class AuthServiceImpl implements AuthService {
 
 	private Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
 
-	@Autowired
-	AuthenticationManager authenticationManager;
+	//@Autowired
+	//AuthenticationManager authenticationManager;
 
 	@Autowired
 	UserService userService;
@@ -59,15 +59,15 @@ public class AuthServiceImpl implements AuthService {
 			throw new PastleyException("No se ha recibido el apodo del usuario.");
 		if (!PastleyValidate.isChain(userDTO.getPassword()))
 			throw new PastleyException("No se ha recibido la clave del usuario.");
-		UserDetails userDetails = userService.loadUserByUsername(userDTO.getNickname());
-		try {
-			authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(userDTO.getNickname(), userDTO.getPassword()));
+		//UserDetails userDetails = userService.loadUserByUsername(userDTO.getNickname());
+		//try {
+			//authenticationManager.authenticate(
+				//	new UsernamePasswordAuthenticationToken(userDTO.getNickname(), userDTO.getPassword()));
 			//return jwtUtil.generateToken(userDetails);
-			return "";
-		} catch (BadCredentialsException e) {
-			LOGGER.error("[login(UserDTO userDTO)]", e);
-		}
+			//return "";
+		//} catch (BadCredentialsException e) {
+			//LOGGER.error("[login(UserDTO userDTO)]", e);
+		//}
 		throw new PastleyException("No se ha logeado.");
 	}
 
