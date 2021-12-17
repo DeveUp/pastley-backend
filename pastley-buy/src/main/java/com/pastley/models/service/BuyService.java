@@ -1,4 +1,4 @@
-package com.pastley.application.service;
+package com.pastley.models.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.pastley.application.exception.PastleyException;
-import com.pastley.application.repository.BuyRepository;
-import com.pastley.application.validator.PastleyDate;
-import com.pastley.application.validator.PastleyValidate;
-import com.pastley.domain.Buy;
-import com.pastley.domain.BuyDetail;
-import com.pastley.infrastructure.config.PastleyInterface;
+import com.pastley.util.exception.PastleyException;
+import com.pastley.util.PastleyDate;
+import com.pastley.util.PastleyValidate;
+import com.pastley.models.domain.Buy;
+import com.pastley.models.domain.BuyDetail;
+import com.pastley.models.repository.BuyRepository;
 
 @Service
-public class BuyService implements PastleyInterface<Long, Buy> {
+public class BuyService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(BuyService.class);
 
@@ -32,7 +31,6 @@ public class BuyService implements PastleyInterface<Long, Buy> {
 	@Autowired
 	ProviderService providerService;
 
-	@Override
 	public Buy findById(Long id) {
 		if (!PastleyValidate.isLong(id))
 			throw new PastleyException(HttpStatus.NOT_FOUND, "El id de la compra no es valido.");
@@ -42,12 +40,10 @@ public class BuyService implements PastleyInterface<Long, Buy> {
 		return buy.orElse(null);
 	}
 
-	@Override
 	public List<Buy> findAll() {
 		return buyRepository.findAll();
 	}
 
-	@Override
 	public List<Buy> findByStatuAll(boolean statu) {
 		return buyRepository.findByStatu(statu);
 	}
@@ -63,10 +59,6 @@ public class BuyService implements PastleyInterface<Long, Buy> {
 		return buyRepository.findByRangeDateRegister(arrayDate[0], arrayDate[1]);
 	}
 
-	@Override
-	public Buy save(Buy entity) {
-		return null;
-	}
 
 	public Buy save(Buy entity, int type) {
 		if (entity == null)
@@ -90,7 +82,6 @@ public class BuyService implements PastleyInterface<Long, Buy> {
 		return buy;
 	}
 
-	@Override
 	public boolean delete(Long id) {
 		return false;
 	}

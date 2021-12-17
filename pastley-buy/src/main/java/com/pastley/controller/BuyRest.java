@@ -1,4 +1,4 @@
-package com.pastley.infrastructure.controller;
+package com.pastley.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pastley.application.service.ProviderService;
-import com.pastley.domain.Provider;
+import com.pastley.models.domain.Buy;
+import com.pastley.models.service.BuyService;
 
 /**
  * @project Pastley-Buy.
@@ -23,55 +23,50 @@ import com.pastley.domain.Provider;
  * @version 1.0.0.
  */
 @RestController()
-@RequestMapping("/provider")
-public class ProviderRest {
+@RequestMapping("/buy")
+public class BuyRest {
 	
 	@Autowired
-	ProviderService providerService;
-    
+	BuyService buyService;
+
 	@GetMapping(value = { "/find/id/{id}", "/{id}" })
 	public ResponseEntity<?> findById(@PathVariable("id") Long id) {
-		return ResponseEntity.status(HttpStatus.OK).body(providerService.findById(id));
+		return ResponseEntity.status(HttpStatus.OK).body(buyService.findById(id));
 	}
 	
-	@GetMapping(value = { "/find/name/{name}" })
-	public ResponseEntity<?> findByName(@PathVariable("name") String name) {
-		return ResponseEntity.status(HttpStatus.OK).body(providerService.findByName(name));
-	}
-
 	@GetMapping(value = { "", "/all" })
 	public ResponseEntity<?> findAll() {
-		return ResponseEntity.status(HttpStatus.OK).body(providerService.findAll());
+		return ResponseEntity.status(HttpStatus.OK).body(buyService.findAll());
 	}
 	
 	@GetMapping(value = {"/all/find/statu/{statu}" })
 	public ResponseEntity<?> findByStatuAll(@PathVariable("statu") boolean statu) {
-		return ResponseEntity.status(HttpStatus.OK).body(providerService.findByStatuAll(statu));
+		return ResponseEntity.status(HttpStatus.OK).body(buyService.findByStatuAll(statu));
 	}
 	
 	@GetMapping(value = "/range/all/find/date/register/{start}/{end}")
 	public ResponseEntity<?> findByRangeDateRegister(@PathVariable("start") String start, @PathVariable("end") String end) {
-		return ResponseEntity.status(HttpStatus.OK).body(providerService.findByRangeDateRegister(start, end));
+		return ResponseEntity.status(HttpStatus.OK).body(buyService.findByRangeDateRegister(start, end));
 	}
 
 	@PostMapping()
-	public ResponseEntity<?> create(@RequestBody Provider provider) {
-		return ResponseEntity.status(HttpStatus.OK).body(providerService.save(provider, 1));
+	public ResponseEntity<?> create(@RequestBody Buy buy) {
+		return ResponseEntity.status(HttpStatus.OK).body(buyService.save(buy, 1));
 	}
 
 	@PutMapping()
-	public ResponseEntity<?> update(@RequestBody Provider provider) {
-		return ResponseEntity.status(HttpStatus.OK).body(providerService.save(provider, 2));
+	public ResponseEntity<?> update(@RequestBody Buy buy) {
+		return ResponseEntity.status(HttpStatus.OK).body(buyService.save(buy, 2));
 	}
 	
 	@PutMapping(value = "/update/statu/{id}")
 	public ResponseEntity<?> updateRoleStatu(@PathVariable("id") Long id) {
-		Provider provider = providerService.findById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(providerService.save(provider, 3));
+		Buy buy = buyService.findById(id);
+		return ResponseEntity.status(HttpStatus.OK).body(buyService.save(buy, 3));
 	}
 	
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-		return ResponseEntity.status(HttpStatus.OK).body(providerService.delete(id));
+		return ResponseEntity.status(HttpStatus.OK).body(buyService.delete(id));
 	}
 }

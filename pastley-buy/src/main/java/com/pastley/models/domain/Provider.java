@@ -1,4 +1,4 @@
-package com.pastley.domain;
+package com.pastley.models.domain;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.pastley.infrastructure.config.PastleyValidate;
+import com.pastley.util.PastleyValidate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

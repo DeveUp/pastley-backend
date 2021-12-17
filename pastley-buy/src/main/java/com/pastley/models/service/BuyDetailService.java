@@ -1,6 +1,5 @@
-package com.pastley.application.service;
+package com.pastley.models.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,14 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.pastley.application.exception.PastleyException;
-import com.pastley.application.repository.BuyDetailRepository;
-import com.pastley.application.validator.PastleyValidate;
-import com.pastley.domain.BuyDetail;
-import com.pastley.infrastructure.config.PastleyInterface;
+import com.pastley.util.exception.PastleyException;
+import com.pastley.util.PastleyValidate;
+import com.pastley.models.domain.BuyDetail;
+import com.pastley.models.repository.BuyDetailRepository;
 
 @Service
-public class BuyDetailService implements PastleyInterface<Long, BuyDetail>{
+public class BuyDetailService{
 
 	@Autowired
 	BuyDetailRepository buyDetailRepository;
@@ -23,7 +21,6 @@ public class BuyDetailService implements PastleyInterface<Long, BuyDetail>{
 	@Autowired
 	BuyService buyService;
 	
-	@Override
 	public BuyDetail findById(Long id) {
 		if (!PastleyValidate.isLong(id))
 			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del detalle de compra no es valido.");
@@ -33,14 +30,8 @@ public class BuyDetailService implements PastleyInterface<Long, BuyDetail>{
 		return buyDetail.orElse(null);
 	}
 	
-	@Override
 	public List<BuyDetail> findAll() {
 		return buyDetailRepository.findAll();
-	}
-	
-	@Override
-	public List<BuyDetail> findByStatuAll(boolean statu) {
-		return new ArrayList<>();
 	}
 	
 	
@@ -50,7 +41,6 @@ public class BuyDetailService implements PastleyInterface<Long, BuyDetail>{
 		return buyDetailRepository.findByBuy(idBuy);
 	}
 
-	@Override
 	public BuyDetail save(BuyDetail entity) {
 		if(entity == null)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "No se ha recibido la compra.");
@@ -68,7 +58,6 @@ public class BuyDetailService implements PastleyInterface<Long, BuyDetail>{
 		return buyDetail;
 	}
 	
-	@Override
 	public boolean delete(Long id) {
 		return false;
 	}

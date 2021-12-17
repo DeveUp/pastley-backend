@@ -1,4 +1,4 @@
-package com.pastley.domain;
+package com.pastley.models.domain;
 
 import java.io.Serializable;
 

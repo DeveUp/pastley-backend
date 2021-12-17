@@ -1,4 +1,4 @@
-package com.pastley.application.service;
+package com.pastley.models.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,12 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.pastley.application.exception.PastleyException;
-import com.pastley.application.repository.ProviderRepository;
-import com.pastley.application.validator.PastleyDate;
-import com.pastley.application.validator.PastleyValidate;
-import com.pastley.domain.Provider;
-import com.pastley.infrastructure.config.PastleyInterface;
+import com.pastley.util.exception.PastleyException;
+import com.pastley.util.PastleyDate;
+import com.pastley.util.PastleyValidate;
+import com.pastley.models.domain.Provider;
+import com.pastley.models.repository.ProviderRepository;
 
 /**
  * @project Pastley-Buy.
@@ -24,14 +23,13 @@ import com.pastley.infrastructure.config.PastleyInterface;
  * @version 1.0.0.
  */
 @Service
-public class ProviderService implements PastleyInterface<Long, Provider> {
+public class ProviderService{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProviderService.class);
 
 	@Autowired
 	ProviderRepository providerRepository;
 
-	@Override
 	public Provider findById(Long id) {
 		if (id <= 0)
 			throw new PastleyException(HttpStatus.NOT_FOUND, "El id del proveedor no es valido.");
@@ -50,12 +48,10 @@ public class ProviderService implements PastleyInterface<Long, Provider> {
 		return provider;
 	}
 	
-	@Override
 	public List<Provider> findAll() {
 		return providerRepository.findAll();
 	}
-	
-	@Override
+
 	public List<Provider> findByStatuAll(boolean statu) {
 		return providerRepository.findByStatu(statu);
 	}
@@ -63,11 +59,6 @@ public class ProviderService implements PastleyInterface<Long, Provider> {
 	public List<Provider> findByRangeDateRegister(String start, String end) {
 		String arrayDate[] = PastleyValidate.isRangeDateRegisterValidateDate(start, end);
 		return providerRepository.findByRangeDateRegister(arrayDate[0], arrayDate[1]);
-	}
-
-	@Override
-	public Provider save(Provider entity) {
-		return null;
 	}
 	
 	public Provider save(Provider entity, int type) {
@@ -86,7 +77,6 @@ public class ProviderService implements PastleyInterface<Long, Provider> {
 		return provider;
 	}
 	
-	@Override
 	public boolean delete(Long id) {
 		findById(id);
 		providerRepository.deleteById(id);
